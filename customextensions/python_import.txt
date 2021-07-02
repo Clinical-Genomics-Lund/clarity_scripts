@@ -1,0 +1,3049 @@
+from xml.dom.minidom import parseString
+import subprocess
+import re
+import sys
+import re
+import sys
+import re
+import sys
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import glsapiutil
+import os
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+import re
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+import re
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+import re
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+import re
+import CMDvar
+import CMDfunc
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+import re
+import CMDvar
+import CMDfunc
+from xml.dom.minidom import parseString
+from genologics.lims import *
+import sys
+import getopt
+from genologics.lims import *
+import sys
+import getopt
+import datetime
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+import re
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import CMDvar
+import CMDfunc
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import CMDvar
+import CMDfunc
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import CMDfunc
+import CMDvar
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import CMDfunc
+import CMDvar
+import sys
+import re
+import os.path
+from optparse import OptionParser
+from xml.dom.minidom import parseString
+import glsapiutil   # needed for api calls
+import glsfileutil  # needed to download file
+import sys
+import re
+import os.path
+from optparse import OptionParser
+from xml.dom.minidom import parseString
+import glsapiutil   # needed for api calls
+import glsfileutil  # needed to download file
+import sys
+import re
+import os.path
+from optparse import OptionParser
+from xml.dom.minidom import parseString
+import glsapiutil   # needed for api calls
+import glsfileutil  # needed to download file
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+from optparse import OptionParser
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import sys
+import getopt
+import datetime
+from GetSampleInfoForSampleSheetv4 import getMICROinfo, getMYELOIDinfo, getEXOMEinfo, getRNASEQinfo, getTWISTinfo, gethumanWGSinfo, getSARSinfo, getNIPTinfo
+import re
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+from GetSampleInfoForSampleSheetv4 import getMICROinfo, getMYELOIDinfo, getEXOMEinfo, getRNASEQinfo, getTWISTinfo, gethumanWGSinfo
+import re
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+from GetSampleInfoForSampleSheetv4 import getMICROinfo, getMYELOIDinfo, getEXOMEinfo, getRNASEQinfo, getTWISTinfo, gethumanWGSinfo, getSARSinfo, getNIPTinfo
+import re
+from genologics.lims import *
+from genologics.entities import *
+from xml.dom.minidom import parseString
+import subprocess
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import re
+import xml.etree.ElementTree as ET
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+import re
+from xml.dom.minidom import parseString
+from genologics.lims import *
+import sys
+import getopt
+import datetime
+import csv 
+import pprint
+import urllib
+import re
+import CMDfunc
+from genologics.lims import *
+import sys
+import getopt
+import datetime
+import csv 
+import pprint
+import urllib
+from genologics.lims import *
+import sys
+import getopt
+import datetime
+import csv 
+import pprint
+import urllib
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+import platform
+from subprocess import call
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+from subprocess import call
+from genologics.lims import *
+import sys
+import getopt
+import datetime
+from genologics.lims import *
+import sys
+import getopt
+import datetime
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import glsapiutil
+import os
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+import platform
+from subprocess import call
+import glsfileutil
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+from subprocess import call
+import glsfileutil
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+import platform
+from subprocess import call
+import glsfileutil
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+from subprocess import call
+import glsfileutil
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+import platform
+from subprocess import call
+import glsfileutil
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+from subprocess import call
+import glsfileutil
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+from xml.dom.minidom import parseString
+from genologics.lims import *
+import xlsxwriter
+import sys
+import getopt
+import datetime
+from genologics.lims import *
+import xlsxwriter
+import sys
+import getopt
+import datetime
+from __future__ import division
+import sys
+import getopt
+import glsapiutil
+import xml.dom.minidom
+import os
+import re
+import string
+from xml.dom.minidom import parseString
+import xml.etree.ElementTree as ET
+import urllib2
+import time
+import random
+import pprint
+import math
+import platform
+import sys
+from __future__ import division
+import sys
+import getopt
+import glsapiutil
+import xml.dom.minidom
+import os
+import re
+import string
+from xml.dom.minidom import parseString
+import xml.etree.ElementTree as ET
+import urllib2
+import time
+import random
+import pprint
+import math
+import platform
+import sys
+import sys
+import csv
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import csv
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import logging
+import sys
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import glsapiutil
+import os
+from xml.dom.minidom import parseString
+from genologics.lims import *
+import sys
+import getopt
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+import platform
+from subprocess import call
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+import platform
+from subprocess import call
+import sys
+import getopt
+import glsapiutil
+import smtplib
+from xml.dom.minidom import parseString
+from email.mime.text import MIMEText
+import subprocess
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import glsapiutil
+import os
+from xml.dom.minidom import parseString
+from genologics.lims import *
+import sys
+import getopt
+import datetime
+import csv 
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import sys
+import csv 
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import glsapiutil
+import os
+from xml.dom.minidom import parseString
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import glsapiutil
+import os
+from xml.dom.minidom import parseString
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+import re
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+import re
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+import re
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import glsapiutil
+import os
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+import re
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+import re
+from genologics.lims import *
+from genologics.entities import *
+from xml.dom.minidom import parseString
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import glsapiutil
+import xml.dom.minidom
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import glsapiutil
+import xml.dom.minidom
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import glsapiutil
+import xml.dom.minidom
+import xlsxwriter
+import re
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+import re
+from xml.dom.minidom import parseString
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import glsapiutil
+import xml.dom.minidom
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import glsapiutil
+import xml.dom.minidom
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import glsapiutil
+import os
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+import getopt
+import sys
+import platform
+import re
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+import getopt
+import sys
+import re
+import re
+import sys
+import httplib2
+import json
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from pprint import pprint
+from xml.dom.minidom import parseString
+from ION_runPlanTemplate import  updateTorrentRunPlanLiqBi , updateTorrentRunPlan, updateTorrentRunPlanCL
+from __future__ import absolute_import, division, print_function, unicode_literals
+import sys
+import re
+import xml.dom.minidom
+import logging
+from xml.dom.minidom import parseString
+from xml.sax.saxutils import escape
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import glsapiutil
+import os
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+import re
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil3
+from xml.dom.minidom import parseString
+import datetime
+import os
+from subprocess import call
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil3
+from xml.dom.minidom import parseString
+import datetime
+import os
+from subprocess import call
+import sys
+import getopt
+import glsapiutil
+import smtplib
+from xml.dom.minidom import parseString
+from email.mime.text import MIMEText
+import subprocess
+import sys
+import getopt
+import glsapiutil
+import smtplib
+from xml.dom.minidom import parseString
+from email.mime.text import MIMEText
+import subprocess
+import sys
+import getopt
+import glsapiutil
+import smtplib
+from xml.dom.minidom import parseString
+from email.mime.text import MIMEText
+import subprocess
+import sys
+import getopt
+import glsapiutil
+import smtplib
+from xml.dom.minidom import parseString
+from email.mime.text import MIMEText
+import subprocess
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import re
+import xlsxwriter
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import re
+import xlsxwriter
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import re
+import xlsxwriter
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+import re
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+import re
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import glsapiutil
+import os
+from xml.dom.minidom import parseString
+import sys
+import csv
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import glsapiutil
+import smtplib
+from xml.dom.minidom import parseString
+from email.mime.text import MIMEText
+import subprocess
+from genologics.lims import *
+from genologics.entities import SampleHistory
+import sys
+import os
+import getopt
+import csv
+import subprocess
+from datetime import datetime
+from datetime import date
+from genologics.lims import *
+from genologics.entities import SampleHistory
+import sys
+import os
+import getopt
+import csv
+import subprocess
+from datetime import datetime
+from datetime import date
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import glsapiutil
+import os
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import glsapiutil
+import xml.dom.minidom
+import os
+import re
+import string
+from xml.dom.minidom import parseString
+import xml.etree.ElementTree as ET
+import urllib2
+import csv
+import time
+import random
+import pprint
+import platform
+import sys
+import sys
+import getopt
+import glsapiutil
+import xml.dom.minidom
+import os
+import re
+import string
+from xml.dom.minidom import parseString
+import xml.etree.ElementTree as ET
+import urllib2
+import csv
+import time
+import random
+import pprint
+import platform
+import sys
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+import platform
+from subprocess import call
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+import platform
+from subprocess import call
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+import platform
+from subprocess import call
+import glsfileutil
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+from subprocess import call
+import glsfileutil
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import glsapiutil
+import smtplib
+from xml.dom.minidom import parseString
+from email.mime.text import MIMEText
+import subprocess
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+from xml.dom.minidom import parseString
+import logging
+import sys
+import glsfileutil
+import glsapiutil
+from xml.dom import minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import collections
+import urllib
+from __future__ import absolute_import, division, print_function, unicode_literals
+import sys
+import re
+import xml.dom.minidom
+import logging
+from xml.dom.minidom import parseString
+from xml.sax.saxutils import escape
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import glsapiutil
+import os
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+from email.mime.text import MIMEText
+import subprocess
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+from email.mime.text import MIMEText
+import subprocess
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+import platform
+from subprocess import call
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+import platform
+from subprocess import call
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+import platform
+from subprocess import call
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+import platform
+from subprocess import call
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import glsapiutil3
+import smtplib
+from xml.dom.minidom import parseString
+from email.mime.text import MIMEText
+import subprocess
+import sys
+import getopt
+import glsapiutil3
+import smtplib
+from xml.dom.minidom import parseString
+from email.mime.text import MIMEText
+import subprocess
+import sys
+import getopt
+import glsapiutil
+import smtplib
+from xml.dom.minidom import parseString
+from email.mime.text import MIMEText
+import subprocess
+import sys
+import getopt
+import glsapiutil
+import smtplib
+from xml.dom.minidom import parseString
+from email.mime.text import MIMEText
+import subprocess
+import sys
+import getopt
+import glsapiutil3
+import smtplib
+from xml.dom.minidom import parseString
+from email.mime.text import MIMEText
+import subprocess
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+import re
+from xml.dom.minidom import parseString
+from xml.dom.minidom import parseString
+import subprocess
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import xlsxwriter
+import csv
+import re
+import sys
+from datetime import datetime
+import CMDfunc
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+from datetime import datetime
+import sys
+import os
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import sys
+import os
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from genologics.lims import *
+import sys
+import getopt
+import datetime
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import glsapiutil
+import os
+from xml.dom.minidom import parseString
+import sys
+import os
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import os
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import csv
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import csv
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import csv
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import csv
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import csv
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import csv
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+from __future__ import division
+import logging
+import sys
+import math
+import numpy as np
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import xml.dom.minidom
+import re 
+from __future__ import division
+import logging
+import sys
+import math
+import numpy as np
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import xml.dom.minidom
+import re 
+import logging
+import sys
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from genologics.lims import *
+import sys
+import getopt
+import datetime
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import glsapiutil
+import os
+from xml.dom.minidom import parseString
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+import csv
+import glsapiutil
+import glsfileutil
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+import csv
+import glsapiutil
+import glsfileutil
+import re
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+import csv
+import glsapiutil
+import glsfileutil
+import re
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+from operator import itemgetter
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+from operator import itemgetter
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+import csv
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+import csv
+from genologics.lims import *
+from genologics.entities import SampleHistory , Step, StepReagentLots
+import os 
+import sys
+import getopt
+import pprint 
+import json 
+import random 
+import subprocess
+from genologics.lims import *
+from genologics.entities import SampleHistory , Step, StepReagentLots
+import os 
+import sys
+import getopt
+import pprint 
+import json 
+import random 
+import subprocess
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import glsapiutil
+import os
+from xml.dom.minidom import parseString
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+import re
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+import re
+import sys
+import re
+import os 
+import getopt
+from genologics.lims import *
+from genologics.entities import *
+import datetime
+from subprocess import call
+import sys
+import re
+import os 
+import getopt
+from genologics.lims import *
+from genologics.entities import *
+import datetime
+from subprocess import call
+import sys
+import re
+import os
+import getopt
+from genologics.lims import *
+from genologics.entities import *
+import datetime
+from subprocess import call
+import sys
+import re
+import os
+import getopt
+from genologics.lims import *
+from genologics.entities import *
+import datetime
+from subprocess import call
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+import re
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+import re
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+import platform
+from subprocess import call
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+import platform
+from subprocess import call
+import sys
+import getopt
+import glsapiutil
+import smtplib
+from xml.dom.minidom import parseString
+from email.mime.text import MIMEText
+import subprocess
+from xml.dom.minidom import parseString
+import subprocess
+from __future__ import absolute_import, division, print_function, unicode_literals
+import sys
+import re
+import xml.dom.minidom
+import logging
+from xml.dom.minidom import parseString
+from xml.sax.saxutils import escape
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import glsapiutil
+import os
+from xml.dom.minidom import parseString
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+import re
+import glsfileutil
+import csv
+import glsapiutil
+import sys
+from datetime import datetime
+import CMDfunc
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+import re
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+import re
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+import re
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import datetime
+import re
+from genologics.lims import *
+import sys
+import getopt
+import datetime
+from genologics.lims import *
+import sys
+import getopt
+import datetime
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import glsapiutil
+import os
+from xml.dom.minidom import parseString
+from genologics.lims import *
+from genologics.entities import *
+import sys
+import getopt
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import glsapiutil
+import os
+from xml.dom.minidom import parseString
+import sys
+import csv
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import csv
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import csv
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import sys
+import csv
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import logging
+import sys
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import logging
+import sys
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import sys
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import logging
+import sys
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+from subprocess import call
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+import pprint
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+import re
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+from collections import defaultdict
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+import getopt
+import sys
+import re
+from collections import defaultdict
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+import getopt
+import sys
+import re
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+import getopt
+import sys
+import re
+from collections import defaultdict
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import re
+from xml.dom.minidom import parseString
+from __future__ import division
+import sys
+import getopt
+import glsapiutil
+import xml.dom.minidom
+import os
+import re
+import string
+from xml.dom.minidom import parseString
+import xml.etree.ElementTree as ET
+import urllib2
+import time
+import random
+import pprint
+import math 
+import sys
+from __future__ import division
+import sys
+import getopt
+import glsapiutil
+import xml.dom.minidom
+import os
+import re
+import string
+from xml.dom.minidom import parseString
+import xml.etree.ElementTree as ET
+import urllib2
+import time
+import random
+import pprint
+import math 
+import sys
+import sys
+import re
+import os.path
+from optparse import OptionParser
+from xml.dom.minidom import parseString
+import glsapiutil   # needed for api calls
+import glsfileutil  # needed to download file
+import sys
+import getopt
+import glsapiutil
+import smtplib
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import pprint
+import logging
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import logging
+import sys
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import re
+import sys
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import re
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+from xml.dom.minidom import parseString
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+import getopt
+import sys
+import re
+from collections import defaultdict
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+import getopt
+import sys
+import re
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import httplib2
+import json
+from pprint import pprint
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import httplib2
+import json
+from pprint import pprint
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import httplib2
+import json
+from pprint import pprint
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import os
+from subprocess import call
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import glsapiutil
+import xml.dom.minidom
+import os
+import re
+import string
+from xml.dom.minidom import parseString
+import xml.etree.ElementTree as ET
+import urllib2
+import csv
+import time
+import random
+import pprint
+import sys
+import sys
+import getopt
+import glsapiutil
+import xml.dom.minidom
+import os
+import re
+import string
+from xml.dom.minidom import parseString
+import xml.etree.ElementTree as ET
+import urllib2
+import csv
+import time
+import random
+import pprint
+import sys
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import glsapiutil_good
+import xml.dom.minidom
+import os
+import re
+import requests
+import string
+from xml.dom.minidom import parseString
+import xml.etree.ElementTree as ET
+import sys
+import getopt
+import glsapiutil_good
+import xml.dom.minidom
+import os
+import re
+import requests
+import string
+from xml.dom.minidom import parseString
+import xml.etree.ElementTree as ET
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+import getopt
+import sys
+import re
+from collections import defaultdict
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import httplib2
+import json
+from pprint import pprint
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import httplib2
+import json
+from pprint import pprint
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import os
+from subprocess import call
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+from subprocess import call
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+from subprocess import call
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+from subprocess import call
+import sys
+import re
+import getopt
+import glsapiutil
+import datetime
+import os
+from subprocess import call
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+from subprocess import call
+import sys
+import test_sendEmail
+from datetime import datetime
+import subprocess
+import sys
+import csv
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import subprocess
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import glob
+import os
+from time import sleep
+import subprocess
+import sys
+import re
+import test_sendEmail
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import glsapiutil
+import os
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import glob
+import os
+from time import sleep
+import subprocess
+import sys
+import re
+import glob
+import os
+from time import sleep
+import subprocess
+import sys
+import re
+import glob
+from time import sleep
+import subprocess
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import pprint
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import pprint
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import pprint
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import pprint
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import pprint
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import pprint
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import re
+import sys
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+from GetSampleInfoForSampleSheet import getMICROinfo, getNIPTinfo, getMYELOIDinfo, getEXOMEinfo
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+from GetSampleInfoForSampleSheet import getMICROinfo, getNIPTinfo, getMYELOIDinfo, getEXOMEinfo
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+from GetSampleInfoForSampleSheet import getMICROinfo, getNIPTinfo, getMYELOIDinfo, getEXOMEinfo
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+from genologics.lims import *
+import sys
+import getopt
+import sys
+import os
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from genologics.lims import *
+import sys
+import getopt
+import datetime
+from genologics.lims import *
+import sys
+import getopt
+import datetime
+from genologics.lims import *
+import sys
+import getopt
+import datetime
+from genologics.lims import *
+import sys
+import getopt
+import datetime
+from genologics.lims import *
+import sys
+import getopt
+import datetime
+from genologics.lims import *
+import sys
+import getopt
+import datetime
+from genologics.lims import *
+import sys
+import getopt
+import datetime
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+from subprocess import call
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+from subprocess import call
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+from subprocess import call
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+from subprocess import call
+import csv 
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from genologics.lims import *
+import sys
+import getopt
+import re
+import sys
+import re
+import sys
+import re
+import sys
+import re
+import sys
+import re
+import sys
+import re
+import sys
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+import re
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+import re
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+import re
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+import re
+from xml.dom.minidom import parseString
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+import getopt
+import sys
+import re
+from collections import defaultdict
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+import getopt
+import sys
+import re
+from collections import defaultdict
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+import getopt
+import sys
+import re
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import re
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import sys
+import re
+import os.path
+from optparse import OptionParser
+from xml.dom.minidom import parseString
+import glsapiutil   # needed for api calls
+import glsfileutil  # needed to download file
+import sys
+import re
+import os.path
+from optparse import OptionParser
+from xml.dom.minidom import parseString
+import glsapiutil   # needed for api calls
+import glsfileutil  # needed to download file
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+from optparse import OptionParser
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+from GetSampleInfoForSampleSheet import getMICROinfo, getNIPTinfo, getMYELOIDinfo, getEXOMEinfo
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+from GetSampleInfoForSampleSheetv2 import getMICROinfo, getNIPTinfo, getMYELOIDinfo, getEXOMEinfo, getRNASEQinfo
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+from GetSampleInfoForSampleSheetv2 import getMICROinfo, getNIPTinfo, getMYELOIDinfo, getEXOMEinfo, getRNASEQinfo, getTWISTinfo
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+from GetSampleInfoForSampleSheetv2 import getMICROinfo, getNIPTinfo, getMYELOIDinfo, getEXOMEinfo, getRNASEQinfo, getTWISTinfo
+import sys
+import getopt
+import datetime
+from GetSampleInfoForSampleSheetv4 import getMICROinfo, getMYELOIDinfo, getEXOMEinfo, getRNASEQinfo, getTWISTinfo
+import re
+from genologics.lims import *
+from genologics.entities import *
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+import getopt
+import sys
+import re
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+import getopt
+import sys
+import re
+from optparse import OptionParser
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import csv
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import csv
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import logging
+import sys
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import logging
+import sys
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import sys
+import getopt
+import glsapiutil
+import smtplib
+from xml.dom.minidom import parseString
+from email.mime.text import MIMEText
+import subprocess
+from genologics.lims import *
+import sys
+import getopt
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import pprint
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import pprint
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import glsapiutil
+import xml.dom.minidom
+import os
+import re
+import string
+from xml.dom.minidom import parseString
+import xml.etree.ElementTree as ET
+import urllib2
+import csv
+import time
+import random
+import pprint
+import sys
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import getopt
+import glsapiutil3
+import smtplib
+from xml.dom.minidom import parseString
+from email.mime.text import MIMEText
+import subprocess
+import sys
+import getopt
+import glsapiutil
+import smtplib
+from xml.dom.minidom import parseString
+from email.mime.text import MIMEText
+import subprocess
+import sys
+import getopt
+import glsapiutil3
+import smtplib
+from xml.dom.minidom import parseString
+from email.mime.text import MIMEText
+import subprocess
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+from subprocess import call
+import glsfileutil
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+from subprocess import call
+import glsfileutil
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+from subprocess import call
+import glsfileutil
+import sys
+import os
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import csv
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import csv
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import csv
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import logging
+import sys
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import logging
+import sys
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from __future__ import division
+import statistics
+import logging
+import sys
+import math
+import numpy as np
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import xml.dom.minidom
+import re 
+import logging
+import sys
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import logging
+import sys
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import logging
+import sys
+import glsfileutil
+import glsapiutil
+from xml.dom import minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import collections
+import urllib
+from genologics.lims import *
+import sys
+import getopt
+import datetime
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+from subprocess import call
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil3
+from xml.dom.minidom import parseString
+import datetime
+import os
+from subprocess import call
+import sys
+import getopt
+import glsapiutil
+import smtplib
+from xml.dom.minidom import parseString
+from email.mime.text import MIMEText
+import subprocess
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import xlsxwriter
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+from GetSampleInfoForSampleSheetv3 import getMICROinfo, getNIPTinfo, getMYELOIDinfo, getEXOMEinfo, getRNASEQinfo, getWGSinfo
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+from GetSampleInfoForSampleSheetv3 import getMICROinfo, getNIPTinfo, getMYELOIDinfo, getEXOMEinfo, getRNASEQinfo, getWGSinfo
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+from GetSampleInfoForSampleSheet_WGSv3 import getWGSinfo
+import sys
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+from GetSampleInfoForSampleSheet_WGSv3 import getWGSinfo
+from genologics.lims import *
+import sys
+import getopt
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import glsapiutil
+import os
+from xml.dom.minidom import parseString
+import sys
+import os
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+import csv
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+from xml.dom.minidom import parseString
+import subprocess
+from __future__ import absolute_import, division, print_function, unicode_literals
+import sys
+import re
+import xml.dom.minidom
+import logging
+from xml.dom.minidom import parseString
+from xml.sax.saxutils import escape
+import urllib2
+import re
+import sys
+import xml.dom.minidom
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+from xml.sax.saxutils import escape
+import glsapiutil
+import os
+from xml.dom.minidom import parseString

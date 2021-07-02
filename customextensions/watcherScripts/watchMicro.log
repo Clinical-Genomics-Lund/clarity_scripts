@@ -1,0 +1,12 @@
+python2.7 /opt/gls/clarity/customextensions/COMMON/COMMON_importSamplesCSV.py -u apiuser -p LateDollarsState592 -b https://mtapp046.lund.skane.se/api/v2/ -f <(python2.7 /opt/gls/clarity/customextensions/SarsCoV2/Process_sarsNGS_input.py /mnt/mikro-cmd/SARS-CoV-2/magna_extraktion/#TestTecan210608.txt)
+/usr/local/bin/python2.7 /opt/gls/clarity/customextensions/COMMON/COMMON_importSamplesCSV.py -u apiuser -p LateDollarsState592 -b https://mtapp046.lund.skane.se/api/v2/ -f <(/usr/local/bin/python2.7 /opt/gls/clarity/customextensions/SarsCoV2/Process_sarsNGS_input.py /mnt/mikro-cmd/SARS-CoV-2/magna_extraktion/#TestTecan210608.txt)
+Number of processed lines:  8
+Sample(SIN559A1637)
+Sample(SIN559A1638)
+Sample(SIN559A1639)
+Sample(SIN559A1640)
+Sample(SIN559A1641)
+Sample(SIN559A1642)
+Sample(SIN559A1643)
+Sample(SIN559A1644)
+/usr/local/bin/python2.7 /opt/gls/clarity/customextensions/COMMON/COMMON_importSamplesCSV.py -u apiuser -p LateDollarsState592 -b https://mtapp046.lund.skane.se/api/v2/ -f <(/usr/local/bin/python2.7 /opt/gls/clarity/customextensions/SarsCoV2/Process_sarsNGS_input.py /mnt/mikro-cmd/SARS-CoV-2/magna_extraktion/#TestTecan210608.txt)

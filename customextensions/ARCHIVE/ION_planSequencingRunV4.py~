@@ -1,0 +1,356 @@
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+import getopt
+import sys
+sys.setrecursionlimit(1500)
+import re
+HOSTNAME = 'https://mtapp046.lund.skane.se'
+api = None
+
+def format(value):
+    return str(round(value, 2))
+
+def Normalization(InputAnalytes, TotalVolumePool, AnalysisDict, LoadingConc) :
+
+    for sampleDict in InputAnalytes :
+        LibraryVolume = (LoadingConc / AnalysisDict[sampleDict[sampleDict.keys()[0]]["Analysis"]] ) * (TotalVolumePool / (sampleDict[sampleDict.keys()[0]]["Concentration"] + sampleDict[sampleDict.keys()[0]]["Concentration1_25"]))
+        
+        if LibraryVolume < 2.0 :
+            TotalVolumePool += 1
+            return Normalization(InputAnalytes, TotalVolumePool, AnalysisDict, LoadingConc)
+        else :
+            sampleDict[sampleDict.keys()[0]]["PoolVolume"] = TotalVolumePool
+            if sampleDict[sampleDict.keys()[0]]["Concentration"] > 0 :
+                sampleDict[sampleDict.keys()[0]]["LibraryVolume"] = LibraryVolume
+                sampleDict[sampleDict.keys()[0]]["DilutedLibraryVolume"] = 0
+            else :
+                sampleDict[sampleDict.keys()[0]]["LibraryVolume"] = 0
+                sampleDict[sampleDict.keys()[0]]["DilutedLibraryVolume"] = LibraryVolume
+
+    return InputAnalytes
+
+def getPassedFailed(readDict, InputAnalytes_DNA, InputAnalytes_RNA, InputAnalytes_CF, InputAnalytes_LiqBio, InputAnalytes_CL) :
+    status = "PASSED"
+    #Find out how many of each sample
+    AnalysisDict = {}
+    
+    AnalysisDict["DNA"] = float(len(InputAnalytes_DNA))
+    AnalysisDict["RNA"] = float(len(InputAnalytes_RNA))
+    AnalysisDict["CF"] = float(len(InputAnalytes_CF))
+    AnalysisDict["LiqBio"] = float(len(InputAnalytes_LiqBio))
+    AnalysisDict["CL"] = float(len(InputAnalytes_CL))
+    
+
+    #Get factors
+    AnalysisDict["DNAfactor"] = readDict["MinReadsDNAsample"] / readDict["MinReadsRNAsample"]
+    AnalysisDict["RNAfactor"] = readDict["MinReadsRNAsample"] / readDict["MinReadsRNAsample"]
+    AnalysisDict["CFfactor"] = readDict["MinReadsCFsample"] / readDict["MinReadsRNAsample"] 
+    AnalysisDict["LiqBiofactor"] = readDict["MinReadsLiqBiosample"] / readDict["MinReadsRNAsample"] 
+    AnalysisDict["CLfactor"] = readDict["MinReadsCLsample"] / readDict["MinReadsRNAsample"]
+
+    AnalysisDict["FactorSum"] = (AnalysisDict["DNA"] * AnalysisDict["DNAfactor"]) + (AnalysisDict["RNA"] * AnalysisDict["RNAfactor"]) + (AnalysisDict["CF"] * AnalysisDict["CFfactor"]) + (AnalysisDict["LiqBio"] * AnalysisDict["LiqBiofactor"]) + (AnalysisDict["CL"] * AnalysisDict["CLfactor"])
+    #Check if warning is needed
+    AnalysisDict["ReadsPerFactor"] = readDict["UsableReads"] / AnalysisDict["FactorSum"]
+
+    #DNA
+    if AnalysisDict["DNA"] > 0 :
+        if ( AnalysisDict["ReadsPerFactor"] * AnalysisDict["DNAfactor"]) < readDict["MinReadsDNAsample"] :
+            status = "FAILED"
+    #RNA
+    if AnalysisDict["RNA"] > 0 :
+        if ( AnalysisDict["ReadsPerFactor"] * AnalysisDict["RNAfactor"]) < readDict["MinReadsRNAsample"] :
+            status = "FAILED"
+    #CF
+    if AnalysisDict["CF"] > 0 :
+        if ( AnalysisDict["ReadsPerFactor"] * AnalysisDict["CFfactor"]) < readDict["MinReadsCFsample"] :
+            status = "FAILED"
+
+    #LiqBio
+    if AnalysisDict["LiqBio"] > 0 :
+        if ( AnalysisDict["ReadsPerFactor"] * AnalysisDict["LiqBiofactor"]) < readDict["MinReadsLiqBiosample"] :
+            status = "FAILED"
+
+    #ColonLung CL
+    if AnalysisDict["LiqBio"] > 0 :
+        if ( AnalysisDict["ReadsPerFactor"] * AnalysisDict["CLfactor"]) < readDict["MinReadsCLsample"] :
+            status = "FAILED"
+
+    AnalysisDict["UsableReads" ] = readDict["UsableReads"]
+
+    return status , AnalysisDict
+    
+def getReadInfo(chipType) :
+    if chipType == "520" :
+        readDict = {"UsableReads": float(6300000),
+                    "MinReadsDNAsample" : float(466715),
+                    "MinReadsRNAsample" : float(116565),
+                    "MinReadsCFsample" : float(30000), 
+                    "MinReadsLiqBiosample" : float(2500000),
+                    "MinReadsCLsample" : float(312500)}
+    if chipType == "530" :
+        readDict = {"UsableReads": float(20000000),
+                    "MinReadsDNAsample" : float(466715),
+                    "MinReadsRNAsample" : float(116565),
+                    "MinReadsCFsample" : float(30000),
+                    "MinReadsLiqBiosample" : float(2500000), 
+                    "MinReadsCLsample" : float(312500)}
+    if chipType == "316" :
+        readDict = {"UsableReads": float(3500000),
+                    "MinReadsDNAsample" : float(466715),
+                    "MinReadsRNAsample" : float(116565),
+                    "MinReadsCFsample" : float(30000),
+                    "MinReadsLiqBiosample" : float(2500000), 
+                    "MinReadsCLsample" : float(312500)}
+    if chipType == "318" :
+        readDict = {"UsableReads": float(4000000),
+                    "MinReadsDNAsample" : float(466715),
+                    "MinReadsRNAsample" : float(116565),
+                    "MinReadsCFsample" : float(30000),
+                    "MinReadsLiqBiosample" : float(2500000), 
+                    "MinReadsCLsample" : float(312500)}
+    if chipType == "510" :
+        readDict = {"UsableReads": float(3000000),
+                    "MinReadsDNAsample" : float(466715),
+                    "MinReadsRNAsample" : float(116565),
+                    "MinReadsCFsample" : float(30000),
+                    "MinReadsLiqBiosample" : float(2500000), 
+                    "MinReadsCLsample" : float(312500)}
+    return readDict
+
+def getInputOutput():
+    InputAnalytes_DNA = []
+    InputAnalytes_RNA = []
+    InputAnalytes_CF = []
+    InputAnalytes_LiqBio = []
+    InputAnalytes_CL = []
+
+    AnalysisList = ["DNA", "RNA", "CF", "LiqBio", "CL"]
+
+    poolsURI = HOSTNAME + "/api/v2/steps/" + args[ "stepLimsID" ] + "/pools"
+    poolsDOM = parseString(api.GET(poolsURI))
+
+    processURI = HOSTNAME + "/api/v2/processes/" + args[ "stepLimsID" ]
+    processDOM = parseString(api.GET(processURI))
+
+    pool = poolsDOM.getElementsByTagName( "pool" )
+    if len(pool) != 1:
+        print "Planning of sequencing run can only be performed for one chip at the time. You have chosen more than one ouput pool"
+        processDOM = api.setUDF( processDOM, "Status", "FAILED" )
+        r = api.PUT( processDOM.toxml().encode('utf-8'), processURI)
+        sys.exit(255)
+    else:
+        poolURI = pool[0].getAttribute("output-uri")
+        for inputLibrary in pool[0].getElementsByTagName("input"):
+            iURI = inputLibrary.getAttribute( "uri" )
+            iDOM = parseString(api.GET(iURI))
+            temp = {}
+            sampleLimsID = iDOM.getElementsByTagName("sample")[0].getAttribute("limsid")
+            name = iDOM.getElementsByTagName( "name" )[0].firstChild.data
+            temp[sampleLimsID] = {}
+            temp[sampleLimsID]["Analysis"] = name.split('_')[1]
+
+            if temp[sampleLimsID]["Analysis"] not in AnalysisList:
+                print "SampleName must have DNA/RNA/CF/LiqBio/CL as suffix"
+                processDOM = api.setUDF( processDOM, "Status", "FAILED" )
+                r = api.PUT( processDOM.toxml().encode('utf-8'), processURI)
+                sys.exit(255)
+
+            temp[sampleLimsID]["Concentration"] = float(api.getUDF( iDOM, "qPCR concentration (pM)" ))
+            temp[sampleLimsID]["Orig_Concentration"] = float(api.getUDF( iDOM, "qPCR concentration (pM)" ))
+            if not temp[sampleLimsID]["Concentration"]:
+                print sampleLimsID , " does not have a qPCR concentration"
+                processDOM = api.setUDF( processDOM, "Status", "FAILED" )
+                r = api.PUT( processDOM.toxml().encode('utf-8'), processURI)
+                sys.exit(255)
+ 
+            if temp[sampleLimsID]["Concentration"] >= 2000 :
+                temp[sampleLimsID]["Concentration1_25"] = (temp[sampleLimsID]["Concentration"]/ 25)
+                temp[sampleLimsID]["Concentration"] = 0
+            else:
+                temp[sampleLimsID]["Concentration1_25"] = 0
+
+            temp[sampleLimsID]["well"] = iDOM.getElementsByTagName( "value" )[0].firstChild.data
+            temp[sampleLimsID]["name"] = name
+
+            if temp[sampleLimsID]["Analysis"] == "DNA":
+                InputAnalytes_DNA.append(temp)
+            if temp[sampleLimsID]["Analysis"] == "RNA":
+                InputAnalytes_RNA.append(temp)
+            if temp[sampleLimsID]["Analysis"] == "CF":
+                InputAnalytes_CF.append(temp)  
+            if temp[sampleLimsID]["Analysis"] == "LiqBio":
+                InputAnalytes_LiqBio.append(temp)
+            if temp[sampleLimsID]["Analysis"] == "CL":
+                InputAnalytes_CL.append(temp)
+
+    return pool , InputAnalytes_DNA, InputAnalytes_RNA, InputAnalytes_CF , InputAnalytes_LiqBio,InputAnalytes_CL, processDOM, processURI
+
+def main():
+
+    global api
+    global args
+
+    args = {}
+    opts, extraparams = getopt.getopt(sys.argv[1:], "s:u:p:c:l:f:")
+
+    for o,p in opts:
+        if o == '-s':
+            args[ "stepLimsID" ] = p
+        elif o == '-u':
+            args[ "username" ] = p
+        elif o == '-p':
+            args[ "password" ] = p
+        elif o == '-c':
+            args[ "chipType" ] = p
+        elif o == '-l':
+            args[ "loadingConcentration" ] = p
+        elif o == '-f':
+            args[ "outputFile" ] = p
+
+    api = glsapiutil.glsapiutil2()
+    api.setHostname( HOSTNAME )
+    api.setVersion( "v2" )
+    api.setup( args[ "username" ], args[ "password" ] )
+    
+    pool , InputAnalytes_DNA, InputAnalytes_RNA, InputAnalytes_CF , InputAnalytes_LiqBio,InputAnalytes_CL, processDOM, processURI = getInputOutput()
+
+    readDict = getReadInfo(args[ "chipType" ])
+    
+    status, AnalysisDict = getPassedFailed(readDict, InputAnalytes_DNA, InputAnalytes_RNA, InputAnalytes_CF, InputAnalytes_LiqBio, InputAnalytes_CL)
+    
+    if status == "FAILED":
+        processDOM = api.setUDF( processDOM, "Status", "FAILED" )
+        api.PUT( processDOM.toxml().encode('utf-8'), processURI)
+        print "Too many samples. Can not proceed"
+        sys.exit(255)
+
+    #Continue with library normalization, sort the final lists
+    InputAnalytes_DNA  = sorted( Normalization(InputAnalytes_DNA, float(20), AnalysisDict, float(args[ "loadingConcentration" ])) )
+    InputAnalytes_RNA  = sorted( Normalization(InputAnalytes_RNA, float(20), AnalysisDict, float(args[ "loadingConcentration" ])) )
+    InputAnalytes_CF  = sorted( Normalization(InputAnalytes_CF, float(20), AnalysisDict, float(args[ "loadingConcentration" ])) )
+    InputAnalytes_LiqBio  = sorted( Normalization(InputAnalytes_LiqBio, float(20), AnalysisDict, float(args[ "loadingConcentration" ])) )
+    InputAnalytes_CL  = sorted( Normalization(InputAnalytes_CL, float(20), AnalysisDict, float(args[ "loadingConcentration" ])) )
+
+    #Print dilutions to file
+    f = open(args[ "outputFile" ], "w+")
+    f.write("Normalization of Oncomine Focus Assay, CFTR Libraries, Lung LiquidBiopsy and ColonLung samples.\n\n")
+
+    #DNA
+    if InputAnalytes_DNA :
+        SumDNALibraries = 0
+        f.write("#---------------------------------------- DNA POOL ----------------------------------------#\n")
+        f.write("Combine the following DNA libraries at indicated volumes:\n\n")
+        f.write("Sample Name\tWell location\tSample LimsID\tqPCR concentration (pM)\tUndiluted library (ul)\t1:25 Diluted library (ul)\n")
+        for sample in InputAnalytes_DNA :
+            f.write(sample[sample.keys()[0]]["name"] + "\t" + sample[sample.keys()[0]]["well"] + "\t" + sample.keys()[0] + "\t" + format(sample[sample.keys()[0]]["Orig_Concentration"]) + "\t" + format(sample[sample.keys()[0]]["LibraryVolume"]) + "\t" + format(sample[sample.keys()[0]]["DilutedLibraryVolume"]) + "\n")
+
+            TotalPoolVolume = sample[sample.keys()[0]]["PoolVolume"]
+            SumDNALibraries += (sample[sample.keys()[0]]["LibraryVolume"] + sample[sample.keys()[0]]["DilutedLibraryVolume"] )
+        water = TotalPoolVolume - SumDNALibraries
+        f.write("\nNuclease Free Water (ul): " + format(water) )
+        f.write("\n\n")
+
+    #RNA
+    if InputAnalytes_RNA :
+        SumRNALibraries = 0
+        f.write("#---------------------------------------- RNA POOL ----------------------------------------#\n")
+        f.write("Combine the following RNA libraries at indicated volumes:\n\n")
+        f.write("Sample Name\tWell location\tSample LimsID\tqPCR concentration (pM)\tUndiluted library (ul)\t1:25 Diluted library (ul)\n")
+        for sample in InputAnalytes_RNA :
+            f.write(sample[sample.keys()[0]]["name"] + "\t" + sample[sample.keys()[0]]["well"] + "\t" + sample.keys()[0] + "\t" + format(sample[sample.keys()[0]]["Orig_Concentration"]) + "\t" + format(sample[sample.keys()[0]]["LibraryVolume"]) + "\t" + format(sample[sample.keys()[0]]["DilutedLibraryVolume"]) + "\n")
+
+            TotalPoolVolume = sample[sample.keys()[0]]["PoolVolume"]
+            SumRNALibraries += (sample[sample.keys()[0]]["LibraryVolume"] + sample[sample.keys()[0]]["DilutedLibraryVolume"] )
+        water = TotalPoolVolume - SumRNALibraries
+        f.write("\nNuclease Free Water (ul): " + format(water)  )
+        f.write("\n\n") 
+
+    #CF
+    if InputAnalytes_CF :
+        SumCFLibraries = 0
+        f.write("#---------------------------------------- CF POOL ----------------------------------------#\n")
+        f.write("Combine the following CF libraries at indicated volumes:\n\n")
+        f.write("Sample Name\tWell location\tSample LimsID\tqPCR concentration (pM)\tUndiluted library (ul)\t1:25 Diluted library (ul)\n")
+        for sample in InputAnalytes_CF :
+            f.write(sample[sample.keys()[0]]["name"] + "\t" + sample[sample.keys()[0]]["well"] + "\t" + sample.keys()[0] + "\t" + format(sample[sample.keys()[0]]["Orig_Concentration"]) + "\t" + format(sample[sample.keys()[0]]["LibraryVolume"]) + "\t" + format(sample[sample.keys()[0]]["DilutedLibraryVolume"]) + "\n")
+
+            TotalPoolVolume = sample[sample.keys()[0]]["PoolVolume"]
+            SumCFLibraries += (sample[sample.keys()[0]]["LibraryVolume"] + sample[sample.keys()[0]]["DilutedLibraryVolume"] )
+        water = TotalPoolVolume - SumCFLibraries
+        f.write("\nNuclease Free Water (ul): " + format(water) )
+        f.write("\n\n")
+
+    #LiqBio
+    if InputAnalytes_LiqBio :
+        SumLiqBioLibraries = 0
+        f.write("#---------------------------------------- LiquidBiopsy POOL ----------------------------------------#\n")
+        f.write("Combine the following LiquidBiopsy libraries at indicated volumes:\n\n")
+        f.write("Sample Name\tWell location\tSample LimsID\tqPCR concentration (pM)\tUndiluted library (ul)\t1:25 Diluted library (ul)\n")
+        for sample in InputAnalytes_LiqBio :
+            f.write(sample[sample.keys()[0]]["name"] + "\t" + sample[sample.keys()[0]]["well"] + "\t" + sample.keys()[0] + "\t" + format(sample[sample.keys()[0]]["Orig_Concentration"]) + "\t" + format(sample[sample.keys()[0]]["LibraryVolume"]) + "\t" + format(sample[sample.keys()[0]]["DilutedLibraryVolume"]) + "\n")
+            
+            TotalPoolVolume = sample[sample.keys()[0]]["PoolVolume"]
+            SumLiqBioLibraries += (sample[sample.keys()[0]]["LibraryVolume"] + sample[sample.keys()[0]]["DilutedLibraryVolume"] )
+        water = TotalPoolVolume - SumLiqBioLibraries
+        f.write("\nNuclease Free Water (ul): " + format(water) )
+        f.write("\n\n")
+
+    #ColonLung CL
+    if InputAnalytes_CL :
+        SumCLLibraries = 0
+        f.write("#---------------------------------------- ColonLung POOL ----------------------------------------#\n")
+        f.write("Combine the following ColonLung libraries at indicated volumes:\n\n")
+        f.write("Sample Name\tWell location\tSample LimsID\tqPCR concentration (pM)\tUndiluted library (ul)\t1:25 Diluted library (ul)\n")
+        for sample in InputAnalytes_CL :
+            f.write(sample[sample.keys()[0]]["name"] + "\t" + sample[sample.keys()[0]]["well"] + "\t" + sample.keys()[0] + "\t" + format(sample[sample.keys()[0]]["Orig_Concentration"]) + "\t" + format(sample[sample.keys()[0]]["LibraryVolume"]) + "\t" + format(sample[sample.keys()[0]]["DilutedLibraryVolume"]) + "\n")
+            
+            TotalPoolVolume = sample[sample.keys()[0]]["PoolVolume"]
+            SumCLLibraries += (sample[sample.keys()[0]]["LibraryVolume"] + sample[sample.keys()[0]]["DilutedLibraryVolume"] )
+        water = TotalPoolVolume - SumCLLibraries
+        f.write("\nNuclease Free Water (ul): " + format(water) )
+        f.write("\n\n")
+
+    #Combine DNA/RNA/CF/LiqBio/CL pool
+    f.write("#---------------------------------------- Combine pools ----------------------------------------#\n")
+    f.write("Loading concentration (pM):\t" + str(float(args[ "loadingConcentration" ])) + "\n\n")
+
+    FinalDNAPoolVolume = (25 * AnalysisDict["DNA"] * ( (AnalysisDict["DNAfactor"] * AnalysisDict["ReadsPerFactor"])/ AnalysisDict["UsableReads"] ) )
+    FinalRNAPoolVolume = (25 * AnalysisDict["RNA"] * ( (AnalysisDict["RNAfactor"] * AnalysisDict["ReadsPerFactor"])/ AnalysisDict["UsableReads"] ) ) 
+    FinalCFPoolVolume = (25 * AnalysisDict["CF"] * ( (AnalysisDict["CFfactor"] * AnalysisDict["ReadsPerFactor"])/ AnalysisDict["UsableReads"] ) )
+    FinalLiqBioPoolVolume = (25 * AnalysisDict["LiqBio"] * ( (AnalysisDict["LiqBiofactor"] * AnalysisDict["ReadsPerFactor"])/ AnalysisDict["UsableReads"] ) )
+    FinalCLPoolVolume = (25 * AnalysisDict["CL"] * ( (AnalysisDict["CLfactor"] * AnalysisDict["ReadsPerFactor"])/ AnalysisDict["UsableReads"] ) )
+
+    Pdict = { 'FinalDNAPoolVolume' : FinalDNAPoolVolume,
+              'FinalRNAPoolVolume' : FinalRNAPoolVolume, 
+              'FinalCFPoolVolume' : FinalCFPoolVolume, 
+              'FinalLiqBioPoolVolume' : FinalLiqBioPoolVolume ,
+              'FinalCLPoolVolume' : FinalCLPoolVolume}
+
+    lowestPoolVolume = 2
+    Pdict2 = {}
+
+    for k in Pdict.keys() :
+        if Pdict[k] > 0 :
+            Pdict2[k] = Pdict[k]
+            if Pdict[k] < lowestPoolVolume :
+                lowestPoolVolume = Pdict[k]
+
+    for k in Pdict2.keys() :
+        Pdict[k] = (2/lowestPoolVolume) * Pdict[k]
+
+    f.write("Volume DNA pool (ul):\t" + format(Pdict['FinalDNAPoolVolume']  ) + "\n")
+    f.write("Volume RNA pool (ul):\t" + format(Pdict['FinalRNAPoolVolume']  ) + "\n")
+    f.write("Volume CF pool (ul):\t" + format(Pdict['FinalCFPoolVolume'] ) + "\n")
+    f.write("Volume LiqBio pool (ul):\t" + format(Pdict['FinalLiqBioPoolVolume'] ) + "\n")
+    f.write("Volume ColonLung pool (ul):\t" + format(Pdict['FinalCLPoolVolume'] ) + "\n")
+    f.write("###Use only 25 ul in subsequent steps###. \n")
+
+    #Update status 
+    processDOM = api.setUDF( processDOM, "Status", "PASSED" )
+    response = api.PUT( processDOM.toxml().encode('utf-8'), processURI)
+    
+    print "Please open the XLS file and perform library normalization."
+    
+if __name__ == "__main__":
+    main()

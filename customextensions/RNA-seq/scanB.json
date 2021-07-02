@@ -1,0 +1,64 @@
+{
+      "ScanBtest-123": {
+            "DNA": {
+                  "Qiacube date": "2021-03-23", 
+                  "Qiacube position": "1:1", 
+                  "Qiacube operator": "CMD personnel", 
+                  "Protocol": "CMD protocol"
+            }, 
+            "RNA": {
+                  "Qiacube date": "2021-03-23", 
+                  "Qiacube position": "1:1", 
+                  "Qiacube operator": "CMD personnel", 
+                  "Protocol": "CMD protocol"
+            }, 
+            "Library": {
+                  "Protocol": "CMD protocol", 
+                  "Barcode": "04A UDI0025 (ACTAAGAT-AACCGCGG)", 
+                  "Library size": 200, 
+                  "Plate well": "1:1", 
+                  "Operator": "CMD personnel", 
+                  "Library molarity": "189.39", 
+                  "Qubit concentration (ng/ul)": 25, 
+                  "Date": "2021-03-23", 
+                  "Plate name": "27-92608"
+            }, 
+            "FlowThrough": {
+                  "Qiacube date": "2021-03-23", 
+                  "Qiacube position": "1:1", 
+                  "Qiacube operator": "CMD personnel", 
+                  "Protocol": "CMD protocol", 
+                  "Extraction kit": "80204"
+            }, 
+            "Lysate": {
+                  "Lysate date": "2021-03-23", 
+                  "Protocol": "CMD protocol", 
+                  "Used quantity (mg)": 30, 
+                  "QiaShredder": null, 
+                  "Original volume (ul)": 800, 
+                  "RLT_Plus": null, 
+                  "Partition date": "2021-03-23"
+            }, 
+            "Specimen": {
+                  "Operator partition comment": null, 
+                  "Arrival date": null, 
+                  "Sample comments": null, 
+                  "Laterality": null, 
+                  "Number of delivered tubes": null, 
+                  "Original quantity (mg)": 50, 
+                  "RNA later date + time": null, 
+                  "Sampling date + time": null, 
+                  "Remaining quantity (mg)": 20, 
+                  "Other pathology note": null, 
+                  "PAD": null, 
+                  "Biopsy type": null, 
+                  "Specimen type": null, 
+                  "Sample Name": "RNAexpB1", 
+                  "Number of pieces": null
+            }, 
+            "Pool": {
+                  "Date": "CMD personnel", 
+                  "Pool ID": "122-127733"
+            }
+      }
+}

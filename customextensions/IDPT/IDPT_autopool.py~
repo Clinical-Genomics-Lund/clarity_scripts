@@ -1,0 +1,109 @@
+import sys
+import getopt
+import xml.dom.minidom
+import pprint
+import glsapiutil
+import re
+from genologics.lims import *
+from genologics.entities import *
+from xml.dom.minidom import parseString
+
+HOSTNAME = ""
+VERSION = ""
+BASE_URI = ""
+
+DEBUG = False
+api = None
+
+ARTIFACTS = None
+CACHE_IDS = []
+reagentLabelList = []
+
+#Definition of pool groups (key = analysis at sample level, value = Pool group name) 
+pGroupDef = { 'Microbiology Illumina DNA prep' : 'MicrobiologyDNAprep'  ,
+              'Sars-CoV-2 Illumina DNA prep' : 'SarsDNAprep',}
+
+def getPoolingGroup( inart ):
+	
+	analysis =  inart.samples[0].udf[ "Analysis" ]
+
+	if analysis == "" :
+		print "Detected samples with undefined analysis."
+
+	try:
+		pGroup = pGroupDef[analysis]
+	except:
+		sys.exit("Only samples with an Illumina DNA prep analysis allowed.")
+
+	if "DNAprep" in pGroup:
+		container = inart.location[0].name
+		pGroup = pGroup + "_" + container
+	else:
+		sys.exit("Only samples with an Illumina DNA prep analysis allowed.")
+
+	return pGroup
+
+def checkReagentLabel(reagentLabel) :
+        global reagentLabelList
+
+        if reagentLabel not in reagentLabelList :
+                reagentLabelList.append(reagentLabel)
+        else:
+                print "Index name " + str(reagentLabel) + " already detected for another sample"
+                sys.exit(255)
+
+def autoPool(process):
+
+	pGROUPS = {}
+
+	for inart in process.all_inputs(unique = True):
+		reagentLabel = inart.reagent_labels
+		checkReagentLabel(reagentLabel)
+
+		pGroup = getPoolingGroup( inart )
+
+		## let's put some artifact into the correct group for pooling
+		if pGroup not in pGROUPS.keys():
+			pGROUPS[ pGroup ] = []
+		temp = pGROUPS[ pGroup ]
+		temp.append( inart )
+		pGROUPS[ pGroup ] = temp
+
+	print pGROUPS
+
+def main():
+
+	global args
+	args = {}
+
+	opts, extraparams = getopt.getopt(sys.argv[1:], "s:u:p:x:b:")
+
+	for o,p in opts:
+		if o == '-s':
+			args[ "stepID" ] = p
+		elif o == '-u':
+			args[ "USERNAME" ] = p
+		elif o == '-p':
+			args[ "PASSWORD" ] = p
+		elif o == '-x':
+			args[ "stepURI" ] = p
+		elif o == '-b':
+			args[ "BASEURI" ] = p
+
+	BASEURI = args["BASEURI"].split('api')[0]
+
+	lims = Lims(BASEURI, args["USERNAME"], args["PASSWORD"])
+	lims.check_version()
+
+	process = Process(lims, id = args[ "stepID" ])
+	step = Step(lims , id = args[ "stepID" ])
+
+	api = glsapiutil.glsapiutil2()
+	api.setURI( args[ "stepURI" ])
+	api.setup( args[ "USERNAME" ], args[ "PASSWORD" ] )
+
+	autoPool(process)
+
+if __name__ == "__main__":
+	main()
+

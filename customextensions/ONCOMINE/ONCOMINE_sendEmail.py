@@ -1,0 +1,166 @@
+import sys
+import getopt
+import glsapiutil
+import smtplib
+from xml.dom.minidom import parseString
+from email.mime.text import MIMEText
+import subprocess
+
+HOSTNAME = ""
+VERSION = ""
+BASE_URI = ""
+
+api = None
+SIMULATE = False
+
+def setupGlobalsFromURI( uri ):
+
+	global HOSTNAME
+	global VERSION
+	global BASE_URI
+
+	tokens = uri.split( "/" )
+	HOSTNAME = "/".join(tokens[0:3])
+	VERSION = tokens[4]
+	BASE_URI = "/".join(tokens[0:5]) + "/"
+
+
+def email_template1(eMailInfo ):
+	body = []
+	
+	body.append( "This is an automated message from ClarityLIMS. Please see qPCR concentrations below:\n\n")
+	body.append( "Submitted ID_Lims ID\tSample Conc (ng/ul)\tDV200\tConc (pM)\tStatus\tAnalysis\n")
+
+
+	for dict in eMailInfo:
+		body.append( dict["name"] + "_" + dict["limsID"] + "\t")
+		body.append( dict["sampleConc"] + "\t")
+		body.append( dict["DV200"] + "\t")
+		body.append( dict["conc"]+ "\t")
+		body.append( dict["qc"] + "\t")
+		body.append( dict["analysis"] + "\n")
+		
+	body = "".join( body )
+	return body
+
+def email_template2(eMailInfo ):
+	body = []
+
+	body.append( "This is an automated message from ClarityLIMS. Please see qPCR concentrations below:\n\n") 
+	body.append( "Submitted ID\tLims ID\tConc (pM)\tStatus\tAnalysis\n") 
+
+
+	for dict in eMailInfo:
+		body.append( dict["name"] + "\t")
+		body.append( dict["limsID"] + "\t")
+		body.append( dict["conc"]+ "\t")
+		body.append( dict["qc"] + "\t")
+		body.append( dict["analysis"] + "\n")
+
+	body = "".join( body )
+	return body
+
+
+def send_email( email_SUBJECT_line, email_body, receiver ):
+
+	cmd = """echo "{b}" | mailx -s "{s}" "{to}" 2>/dev/null""".format(b=email_body, s=email_SUBJECT_line, to=receiver)
+	p=subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+	output, errors = p.communicate()
+	print errors,output
+
+def main():
+
+	global api
+	global args
+
+	args = {}
+
+	opts, extraparams = getopt.getopt(sys.argv[1:], "s:u:p:")
+
+	for o,p in opts:
+		if o == '-s':
+			args[ "stepURI" ] = p
+		elif o == '-u':
+			args[ "username" ] = p
+		elif o == '-p':
+			args[ "password" ] = p
+
+	setupGlobalsFromURI( args[ "stepURI" ] )
+	api = glsapiutil.glsapiutil2()
+	api.setHostname( HOSTNAME )
+	api.setVersion( VERSION )
+	api.setup( args[ "username" ], args[ "password" ] )
+
+	Inputs = []
+	eMailONC = []
+	eMailCF = []
+
+	#Get sample information
+	stepURI = args[ "stepURI" ] + "/details"
+	stepDOM = parseString(api.GET(stepURI))
+	IOMaps = stepDOM.getElementsByTagName( "input-output-map" )
+	for IOMap in IOMaps:
+		if IOMap.getElementsByTagName( "output" )[0].getAttribute( "output-generation-type" ) == "PerInput":
+			Inputs.append(IOMap.getElementsByTagName( "output" )[0].getAttribute( "uri" ))
+		
+	Inputs = set(Inputs)
+
+	for i in Inputs :
+		aDOM = parseString( api.GET(i))
+		
+		conc = api.getUDF( aDOM, "qPCR concentration (pM)" )
+		qc = aDOM.getElementsByTagName( "qc-flag" )[0].firstChild.data
+		limsID = aDOM.getElementsByTagName( "sample" )[0].getAttribute( "limsid" )
+
+		subSampleURI = aDOM.getElementsByTagName( "sample" )[0].getAttribute( "uri" )
+		sDOM = parseString(api.GET(subSampleURI))
+
+		analysis = api.getUDF( sDOM, "Analysis" )
+		department = api.getUDF( sDOM, "Department" )
+		
+		name = sDOM.getElementsByTagName( "name" )[0].firstChild.data
+		
+		if (( "Oncomine" in analysis ) and ( "Patologi" in department )) :
+			sampleConc = api.getUDF( sDOM, "Sample concentration (ng/ul)" )
+			nucleotide = api.getUDF( sDOM, "Nucleotide Type" )
+			if (nucleotide == "DNA"):
+				DV200 = "N/A"
+			elif (nucleotide == "RNA"):
+				DV200 = api.getUDF( sDOM, "DV200" )
+
+			eMailONC.append({"name" : name, "limsID" : limsID, "sampleConc" : sampleConc, "DV200" : DV200, "conc" : conc, "qc" : qc , "analysis" : analysis}) 
+
+		elif (( "AmpliSeq CF" in analysis ) and ( "Klinisk Genetik" in department )) :
+			eMailCF.append({"name" : name, "limsID" : limsID, "conc" : conc, "qc" : qc , "analysis" : analysis}) 
+
+	email_SUBJECT_line = 'ClarityLIMS notification'
+
+	if len(eMailONC) >=1 :
+		email_body = email_template1(eMailONC)
+#		send_email( email_SUBJECT_line, email_body, 'Maryem.Salim@skane.se' )
+		send_email( email_SUBJECT_line, email_body, 'Maj.Westman@skane.se' )
+		send_email( email_SUBJECT_line, email_body, 'Morten.Grauslund@skane.se' )
+		send_email( email_SUBJECT_line, email_body, 'Annica.Bjornback@skane.se' )
+		send_email( email_SUBJECT_line, email_body, 'Malgorzata.Tomaszewska@skane.se' )
+		send_email( email_SUBJECT_line, email_body, 'Per.Leveen@skane.se' )
+		send_email( email_SUBJECT_line, email_body, 'Li.Zhou@skane.se' )
+		send_email( email_SUBJECT_line, email_body, 'Marta.Lukasiewicz@skane.se' )
+		send_email( email_SUBJECT_line, email_body, 'Emilie.Andreasen@skane.se' )
+		send_email( email_SUBJECT_line, email_body, 'Heike.Kotarsky@skane.se' )
+		send_email( email_SUBJECT_line, email_body, 'Asa.S.Hakansson@skane.se' )
+		send_email( email_SUBJECT_line, email_body, 'Klara.Leonhard@skane.se' )
+		send_email( email_SUBJECT_line, email_body, 'Maria.Sundberg@skane.se' )
+		
+	if len(eMailCF) >=1 :
+		email_body = email_template2(eMailCF)
+#		send_email( email_SUBJECT_line, email_body, 'Maryem.Salim@skane.se' )
+		send_email( email_SUBJECT_line, email_body, 'Maj.Westman@skane.se' )
+		send_email( email_SUBJECT_line, email_body, 'Edvard.Rask@skane.se' )
+		send_email( email_SUBJECT_line, email_body, 'Annika.Winqvist@skane.se' )
+		send_email( email_SUBJECT_line, email_body, 'Helene.EK.Hansson@skane.se' )
+		send_email( email_SUBJECT_line, email_body, 'GenSG@skane.se' )
+		send_email( email_SUBJECT_line, email_body, 'Anna-Karin.Hansson@skane.se' )
+		
+
+if __name__ == "__main__":
+	main()

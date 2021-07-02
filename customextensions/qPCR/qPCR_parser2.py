@@ -1,0 +1,227 @@
+from __future__ import division
+#import statistics
+import logging
+import sys
+import math
+import numpy as np
+
+####### Configuration Section #######
+
+# Which row in the file is the column headers?
+#HeaderRow = 44
+
+# How is file delimited? examples: ',' '\t'
+delim = '\t'
+
+# MAPPING MODE #
+# What will we use to map the data to the artifacts in Clarity? ( set ONE of these to True )
+MapTo_ArtifactName = False  # matches to name of output artifact
+MapTo_WellLocation = True
+MapTo_UDFValue = False
+
+if MapTo_UDFValue:      # only if MapTo_UDFValue is True
+    UDFName = "Well Position"      # UDF name in Clarity
+
+MappingColumn = 2       # In which column of the csv file will I find the above information? (Name / Well / UDF /ect.)
+
+# What UDFs are we bringing into Clarity?
+artifactUDFMap = {
+    # "Column name in file" : "UDF name in Clarity",
+    "Quantity Mean" : "qPCR concentration (pM)",
+    "Ct SD" : "Ct SD",
+    "Slope" : "Slope" ,
+    "R(superscript 2)" : "R(superscript 2)",
+}
+####### End Config #######
+
+import glsfileutil
+import glsapiutil
+from xml.dom.minidom import parseString
+from optparse import OptionParser
+import xml.dom.minidom
+import re 
+
+
+api = None
+options = None
+
+artifactUDFResults = {}
+DEBUG = False #True
+def getPlacementDOM(stepURI):
+    placementURI = stepURI + "/placements"
+    placementDOM = parseString( api.GET( placementURI ))
+    return placementDOM
+    
+    
+def getContainerType():
+    
+    placementDOM = getPlacementDOM(options.stepURI)
+    containerURI = placementDOM.getElementsByTagName("selected-containers")[0].getElementsByTagName("container")[0].getAttribute("uri")
+    
+    cXML = api.GET( containerURI )
+    cDOM = parseString( cXML )
+    
+    cType = cDOM.getElementsByTagName("type")[0].getAttribute( "uri" )
+    return cType
+    
+
+def performCalculations(results, intercept, slope, plate_size) :
+    
+    container = getContainerType()
+    container = container[-3:]
+    
+    columnDilution = {} 
+
+    if container  == "404": #Regular 96
+        if  plate_size != 96:
+            print('The qPCR outfile dose not match the selected container.')
+            sys.exit(255)
+        elif  plate_size == 96:
+            columnDilution = { 3 : 10000 , 4 : 10000 , 5 : 20000 , 6 : 20000, 7 : 10000, 8 : 10000, 9 : 20000 , 10 : 20000, 11 : 10000, 12 : 20000 }
+        
+    elif container == "454": #Regular 384
+        if  plate_size != 384:
+            print('The qPCR outfile dose not match the selected container.')
+            sys.exit(255)
+        elif  plate_size == 384:
+            columnDilution = {4: 10000, 5: 10000, 6: 20000, 7: 20000, 8: 10000, 9: 10000, 10: 20000, 11: 20000, 12: 10000, 13: 10000, 14: 20000, 15: 20000, 16: 10000, 17: 10000, 18: 20000, 19: 20000 ,20: 10000, 21: 10000, 22: 20000, 23: 20000}  #24 is locked
+    
+    elif container == "554": #Tecan 384
+        if  plate_size != 384:
+            print('The qPCR outfile dose not match the selected container.')
+            sys.exit(255)
+        elif  plate_size == 384:
+            columnDilution = {4: 10000, 5: 20000, 6: 10000, 7: 20000, 8: 10000, 9: 20000, 10: 10000, 11: 20000, 12: 10000, 13: 20000, 14: 10000, 15: 20000, 16: 10000, 17: 20000, 18: 10000, 19: 20000, 20: 10000, 21: 20000, 22: 10000, 23: 20000} #24 is locked
+    for sample in results.keys() :
+        dilution10000 = 0
+        dilution20000 = 0
+        for well, CT in results[sample].items() :
+            column = well[1:]
+            dilution = columnDilution[int(column)]
+            if dilution == 10000 :
+                dilution10000 += float(CT)
+            elif dilution == 20000 :
+                dilution20000 += float(CT)
+
+        avrgDilution10000 = dilution10000 / 2.0
+        avrgDilution20000 = dilution20000 / 2.0 
+
+        logConc10000 = (avrgDilution10000 - intercept ) / slope
+        logConc20000 = (avrgDilution20000 - intercept ) / slope
+        
+        avrg_pMConc10000 = (10**logConc10000 * 10000.0) 
+        avrg_pMConc20000 = (10**logConc20000 * 20000.0) 
+        
+        avrg_sample_pMconc = ( avrg_pMConc10000 + avrg_pMConc20000 ) / 2.0
+        results[sample] = avrg_sample_pMconc
+    
+    return results 
+
+def findHeaderIndex(data) :
+    index = 0
+    #plate_size = int(data[0].split('=')[1].split('-')[0])
+    for row in data[0:] :
+        index += 1
+        if row.split(delim)[0] == "Well" :
+            return index
+
+def parseinputFile():
+    
+    data = downloadfile( options.resultLUID )
+    plate_size = int(data[0].split('=')[1].split('-')[0])
+    
+    if plate_size == 96 :
+        n_standards = 2
+    elif plate_size == 384:
+        n_standards = 3
+    Header = findHeaderIndex(data)
+    columnHeaders = data[Header -1].split( delim )
+
+    if columnHeaders[0] != "Well" :
+        print "Could not find header. Please check input file and/or parser script"
+        sys.exit(255)
+    #Get artifact UDFs
+    results = {}
+
+#    x = np.array([math.log(20), math.log(2), math.log(0.2), math.log(0.02), math.log(0.002), math.log(0.0002)])
+#    y = np.array([7.99, 11.47, 14.88, 18.32, 22.36, 25.15])   
+#    slope = (((mean(x)*mean(y)) - mean(x*y)) / ((mean(x)**2) - mean(x**2)))
+#    stats.linregress(a, b)
+#    slope = ((len(x)*sum(x*y)) - (sum(x)*sum(y)))/(len(x)*(sum(x**2))-(sum(x)**2))
+#    print slope
+#    sys.exit(255)
+    for row in data[Header:]:
+        values = row.split( delim )
+        slope = float(values [16].replace(",", "."))
+        intercept = float(values[14].replace(",", "."))
+    
+        if int(values[1][1:]) > n_standards :
+            values[8] = values[8].replace(",", ".")
+            if values[3] not in results.keys() :
+                results[values[3]] = { values[1] : values[8] }
+            else:
+                results[values[3]][values[1]] = values[8] 
+
+    return results , intercept, slope, plate_size
+
+def limslogic():
+
+    stepdetails = parseString( api.GET( options.stepURI + "/details" ) ) #GET the input output map
+    print(stepdetails)
+    outputArtifacts = {}
+    results, intercept, slope, plate_size = parseinputFile()
+    results = performCalculations(results, intercept, slope, plate_size)
+
+    if DEBUG: logging.info(artifactUDFResults)
+
+    for iomap in stepdetails.getElementsByTagName( "input-output-map" ):
+        output = iomap.getElementsByTagName( "output" )[0]
+        if output.getAttribute( "output-generation-type" ) == 'PerInput':
+            oURI = output.getAttribute( "uri" )
+            oDOM = parseString( api.GET( oURI ) )
+            oLimsID = oDOM.getElementsByTagName( "sample" )[0].getAttribute( "limsid" )
+            outputArtifacts[oLimsID] = oDOM
+
+            value = results[oLimsID] 
+            DOM = api.setUDF( oDOM, "Slope", slope)  
+            DOM = api.setUDF( DOM, "Intercept",intercept )
+            DOM = api.setUDF( DOM, "qPCR concentration (pM)", value )
+            r = api.PUT( DOM.toxml().encode('utf-8'), oURI )
+
+
+def downloadfile( file_art_luid ):
+    newName = str( file_art_luid ) + ".txt"
+    FH.getFile( file_art_luid, newName )
+    raw = open( newName, "r")
+    lines = raw.readlines()
+    raw.close
+    return lines
+
+def setupArguments():
+
+    Parser = OptionParser()
+    Parser.add_option('-u', "--username", action='store', dest='username')
+    Parser.add_option('-p', "--password", action='store', dest='password')
+    Parser.add_option('-s', "--stepURI", action='store', dest='stepURI')
+    Parser.add_option('-r', "--resultLUID", action='store', dest='resultLUID')
+    Parser.add_option('-l', "--logfileLUID", action='store', dest='logfileLUID')
+
+    return Parser.parse_args()[0]
+
+def main():
+    global options
+    options = setupArguments()
+    global api
+    api = glsapiutil.glsapiutil2()
+    api.setURI( options.stepURI )
+    api.setup( options.username, options.password )
+    logging.basicConfig(filename= options.logfileLUID ,level=logging.DEBUG)
+    global FH
+    FH = glsfileutil.fileHelper()
+    FH.setAPIHandler( api )
+    FH.setAPIAuthTokens( options.username, options.password )
+
+    limslogic()
+
+if __name__ == "__main__":
+    main()

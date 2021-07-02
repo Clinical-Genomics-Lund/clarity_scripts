@@ -1,0 +1,27 @@
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+
+HOSTNAME = 'https://mtapp046.lund.skane.se'
+VERSION = "v2"
+BASE_URI = HOSTNAME + "/api/" + VERSION + "/"
+CACHE = {}
+
+def main():
+    api = None
+    api = glsapiutil.glsapiutil()
+    api.setHostname( HOSTNAME )
+    api.setVersion( "v2" )
+    api.setup( "apiuser", "LateDollarsState592" )
+
+    new_XML = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><art:artifact limsid="92-618990" uri="https://mtapp046.lund.skane.se/api/v2/artifacts/92-618990?state=391065" xmlns:art="http://genologics.com/ri/artifact" xmlns:file="http://genologics.com/ri/file" xmlns:udf="http://genologics.com/ri/userdefined"><name>4770-20</name><type>ResultFile</type><output-type>ResultFile</output-type><parent-process limsid="24-101268" uri="https://mtapp046.lund.skane.se/api/v2/processes/24-101268"/><qc-flag>UNKNOWN</qc-flag><sample limsid="ALL503A615" uri="https://mtapp046.lund.skane.se/api/v2/samples/ALL503A615"/><reagent-label name="01D UDI0004 (AAGTCCAA-TATGAGTA)"/><udf:field type="String" name="Variant findings">POS</udf:field><udf:field type="String" name="Variant analysis tool">Scout</udf:field><workflow-stages/></art:artifact>'
+
+    print new_XML
+    response = api.updateObject(new_XML , 'https://mtapp046.lund.skane.se/api/v2/artifacts/92-618990')
+    print response
+
+if __name__ == "__main__":
+    main()

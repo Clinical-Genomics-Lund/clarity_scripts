@@ -1,0 +1,29 @@
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+
+HOSTNAME = 'https://mtapp046.lund.skane.se'
+VERSION = "v2"
+BASE_URI = HOSTNAME + "/api/" + VERSION + "/"
+CACHE = {}
+
+def main():
+    api = None
+    api = glsapiutil.glsapiutil()
+    api.setHostname( HOSTNAME )
+    api.setVersion( "v2" )
+    api.setup( "apiuser", "LateDollarsState592" )
+
+#    new_XML = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><art:artifact limsid="2-274159" uri="https://mtapp046.lund.skane.se/api/v2/artifacts/2-274159?state=172798" xmlns:art="http://genologics.com/ri/artifact" xmlns:file="http://genologics.com/ri/file" xmlns:udf="http://genologics.com/ri/userdefined"><name>23-18_LiqBio</name><type>Analyte</type><output-type>Analyte</output-type><parent-process limsid="24-48163" uri="https://mtapp046.lund.skane.se/api/v2/processes/24-48163"/><qc-flag>PASSED</qc-flag><location><container limsid="27-32470" uri="https://mtapp046.lund.skane.se/api/v2/containers/27-32470"/><value>1:2</value></location><working-flag>true</working-flag><sample limsid="ALL353A22" uri="https://mtapp046.lund.skane.se/api/v2/samples/ALL353A22"/><reagent-label name="TagSequencing_18"/><udf:field type="Numeric" name="qPCR concentration (pM)">448.3</udf:field><workflow-stages><workflow-stage uri="https://mtapp046.lund.skane.se/api/v2/configuration/workflows/501/stages/855" name="Library Quantification" status="COMPLETE"/><workflow-stage uri="https://mtapp046.lund.skane.se/api/v2/configuration/workflows/501/stages/855" name="Library Quantification" status="COMPLETE"/><workflow-stage uri="https://mtapp046.lund.skane.se/api/v2/configuration/workflows/501/stages/856" name="Normalization of libraries for ION Torrent Sequencing" status="IN_PROGRESS"/></workflow-stages></art:artifact>'
+
+    new_XML = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><art:artifact limsid="2-274158" uri="https://mtapp046.lund.skane.se/api/v2/artifacts/2-274158?state=172797" xmlns:art="http://genologics.com/ri/artifact" xmlns:file="http://genologics.com/ri/file" xmlns:udf="http://genologics.com/ri/userdefined"><name>13-18_LiqBio</name><type>Analyte</type><output-type>Analyte</output-type><parent-process limsid="24-48163" uri="https://mtapp046.lund.skane.se/api/v2/processes/24-48163"/><qc-flag>PASSED</qc-flag><location><container limsid="27-32470" uri="https://mtapp046.lund.skane.se/api/v2/containers/27-32470"/><value>1:1</value></location><working-flag>true</working-flag><sample limsid="ALL353A21" uri="https://mtapp046.lund.skane.se/api/v2/samples/ALL353A21"/><reagent-label name="TagSequencing_17"/><udf:field type="Numeric" name="qPCR concentration (pM)">576.2</udf:field><workflow-stages><workflow-stage uri="https://mtapp046.lund.skane.se/api/v2/configuration/workflows/501/stages/855" name="Library Quantification" status="COMPLETE"/><workflow-stage uri="https://mtapp046.lund.skane.se/api/v2/configuration/workflows/501/stages/855" name="Library Quantification" status="COMPLETE"/><workflow-stage uri="https://mtapp046.lund.skane.se/api/v2/configuration/workflows/501/stages/856" name="Normalization of libraries for ION Torrent Sequencing" status="IN_PROGRESS"/></workflow-stages></art:artifact>'
+
+    print new_XML
+    response = api.updateObject(new_XML , 'https://mtapp046.lund.skane.se/api/v2/artifacts/2-274158')
+    print response
+
+if __name__ == "__main__":
+    main()

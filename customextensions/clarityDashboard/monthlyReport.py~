@@ -1,0 +1,243 @@
+# -*- coding: utf-8 -*-
+from genologics.lims import *
+#from genologics.config import BASEURI, USERNAME, PASSWORD
+from genologics.entities import SampleHistory
+import sys
+import os
+import getopt
+import csv
+import subprocess
+from datetime import datetime
+from datetime import date
+
+def checkNIPTsample(lims, id) : 
+#For NIPT samples, include only approved samples 
+#(based on flag in data analysis step)
+	approved = False 
+
+	NIPT_dataAnalysis_Art = lims.get_artifacts(
+		process_type='NIPT - Clarigo Data Analysis and Report v.1',
+		udf={'Sample Classification' : 'Rutinprov - Godkänt'},
+		type = 'ResultFile', 
+		samplelimsid=id)
+	if len(NIPT_dataAnalysis_Art) >= 1 : 
+		approved = True 
+	else: 
+		NIPT_dataAnalysis_Art = lims.get_artifacts(
+			process_type='NIPT - Clarigo Data Analysis and Report v.1',
+			udf={'Sample Classification' : 'Rutinprov - Ej Godkänt'},
+			type = 'ResultFile',
+			samplelimsid=id)
+		if len(NIPT_dataAnalysis_Art) == 0 :
+			#Not yet approved in data analysis 
+			approved = True
+	return approved 
+
+def gatherInfo(s) : 
+	row = {}
+	row['name'] = s.name
+	row['limsid'] = s.id
+	row['date'] = s.date_received
+	row['user'] = s.submitter.first_name.encode('utf-8','ignore')  + " " + s.submitter.last_name.encode('utf-8','ignore')
+	row['project'] = s.project.name
+	try:
+		row['diagnosis'] = s.udf['Diagnosis'].encode('utf-8','ignore')
+	except:
+		row['diagnosis'] = "n/a"
+	row['progress'] = s.udf['Progress']
+	row['sequencingRuns'] = s.udf['Sequencing runs']
+	row['analysis'] = s.udf['Analysis']
+	row['department'] = s.udf['Department'].encode('utf-8','ignore')
+	return row 
+
+def main():
+	global args
+	args = {}
+	opts, extraparams = getopt.getopt(sys.argv[1:], "b:s:u:p:y:q:")
+	for o,p in opts:
+		if o == '-b':
+			args[ "BASEURI" ] = p
+		elif o == '-u':
+			args[ "USERNAME" ] = p
+		elif o == '-p':
+			args[ "PASSWORD" ] = p
+		elif o == '-y':
+			args[ "Year" ] = p 
+		elif o == '-q':
+			args[ "Quarter" ] = p
+
+	BASEURI = args["BASEURI"].split('api')[0]
+	lims = Lims(BASEURI, args["USERNAME"], args["PASSWORD"])
+
+	print "\nscript started " 
+	print datetime.now()
+
+	lims.check_version()
+
+	#Quarter must be indicated
+	if 'Quarter' not in args.keys() :
+		print "option -q neccessary"
+		sys.exit(255)
+	elif 'Year' not in args.keys() :
+		print "option -y neccessary"
+		sys.exit(255)
+	if args[ "Quarter" ] not in ['Q1' , 'Q2' , 'Q3', 'Q4' ] : 
+		print "Quarter must be indicated as Q1-Q4"
+		sys.exit(255)
+
+	############################
+	#Monthly report
+	############################
+
+	#Get all projects
+	#projects = lims.get_projects()
+	#for project in projects : 
+	#print project , project.name
+
+	#Relevant projects:
+	projects = [
+		'ALL501',
+		'ALL502',
+		'ALL503',
+		'ALL504', 
+		'ALL505',
+		'ALL506', 
+		'ALL507', 
+		'ALL508',
+		'ALL509',
+		'ALL510'
+		]
+	print "\nThe following projects will be included:\n" 
+	print projects
+
+	#Get months in specified quarter
+	quarter = {'Q1' : ['01' , '02' , '03'] , 
+		    'Q2' : ['04' , '05' , '06' ] , 
+		    'Q3' : ['07' , '08' , '09' ] ,
+		    'Q4' : ['10' , '11' , '12' ]
+		    }
+
+	quarterStart = {'Q1' : '-01-01' ,
+			'Q2' : '-04-01' ,
+			'Q3' : '-07-01' ,
+			'Q4' : '-10-01' ,
+			} 
+
+        quarterStop = {'Q1' : '-03-31' ,
+			'Q2' : '-06-30' ,
+			'Q3' : '-09-30' ,
+			'Q4' : '-12-31' ,
+			} 
+	
+	#Department udf (print all available)
+	#udfs = lims.get_udfs(name='Department')
+	#udfs = udfs[0]
+	#for value in udfs.presets :
+	#	print value.encode('utf-8')
+	#sys.exit(255)
+
+	'''
+	Klinisk Patologi
+	Klinisk Genetik
+	Klinisk Mikrobiologi
+	Klinisk Kemi
+	CMD
+	TEST
+	Sahlgrenska Klinisk Genetik
+	CTG - Anna Andersson
+	CMD - Diana Karpman
+	Klinisk immunologi och transfusionsmedicin
+	CTG - Andreas Puschmann
+	CTG - Fredrik Mertens
+	CTG - Vineta Fellman
+	CTG - David Gisselsson
+	CTG - Jill Storry
+	CTG - Fredrik Liedberg
+	CTG - Thoas Fioretos
+	Universitetssjukhuset Örebro
+	CTG - Anders Edsjö
+	CTG - Caroline Hansen Nord
+	CTG - Bo Nilsson
+	CTG - Martin Sundwall
+	CTG - Agnete Kirkeby
+	CTG - Arne Egesten
+	CTG - Lisa Påhlman
+	CTG - Mats Ehinger
+	CTG - Anna Hagstrom
+	CTG - Rolf Lood
+	GMS-AL
+	'''
+	#Relevant departments
+	departments = [ 'Klinisk Mikrobiologi',
+			'Klinisk Kemi',
+			'Sahlgrenska Klinisk Genetik',
+			'CMD - Diana Karpman',
+			'Klinisk immunologi och transfusionsmedicin',  
+			'Universitetssjukhuset Örebro'
+			]
+	print "\nThe following departments will be included:\n" 
+	print departments
+	
+	#Get all samples
+	samples = []
+	for project in projects :
+		samples += lims.get_samples(projectlimsid=project, udf={'Classification' : 'Rutinprov' ,'Department' : departments })
+
+	'''
+	#Get data for sample table
+	with open('/opt/gls/clarity/customextensions/clarityDashboard/monthly.csv', 'w') as csvfile:
+		print "\nopened csv file for writing " , datetime.now()
+		fieldnames = ["name" , 
+			      "limsid" , 
+			      "date" , 
+			      "user" , 
+			      "project", 
+			      "diagnosis", 
+			      "progress" , 
+			      "sequencingRuns" , 
+			      "analysis" , 
+			      "department"]
+		writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+		writer.writeheader()
+		rejectedNIPTsamples = []
+
+		for s in samples :
+			row = None
+			for q in quarter[args[ "Quarter" ] ] :
+				q_date = args[ "Year" ] + "-" + q
+				#Pick only samples within right quarter
+				if q_date in s.date_received :
+					#Exclude non-approved NIPT samples
+					if "Clarigo NIPT" in s.udf['Analysis'] : 
+						check = checkNIPTsample(lims, s.id) 
+						if check == False :
+							rejectedNIPTsamples.append(s.id)
+						else: 
+							row = gatherInfo(s) 
+					else: 
+						row = gatherInfo(s)
+					if row :	
+						writer.writerow(row)
+
+	print "\nExcluded NIPT samples:\n"
+	print rejectedNIPTsamples
+	'''
+	#Create html report on Lennart
+	server = "maryem@10.0.224.63"
+	dir_date = args[ "Quarter" ] + args[ "Year" ] + "_" + str( date.today() )
+	dir_path = "/home/maryem/monthlyReports/kvartalsrapport_clarity/" + dir_date
+#	result = subprocess.call(["ssh", server, "mkdir" , dir_path])
+#	result = subprocess.call(["scp", "monthly.csv", "%s:%s" % (server, dir_path)]) 
+
+	startM = args[ "Year" ] + quarterStart[args[ "Quarter" ]]
+	stopM = args[ "Year" ] + quarterStop[args[ "Quarter" ]]
+	csv_file = "/home/maryem/monthlyReports/kvartalsrapport_clarity/" + dir_date + "/monthly.csv"
+	rmd_command = "Rscript -e 'library(rmarkdown); rmarkdown::render(\"/home/maryem/monthlyReports/kvartalsrapport_clarity/quarterlyReport_updated_MS.Rmd\", params = list(startM = \"" + startM + "\", stopM = \"" + stopM + "\" , csvFile=\"" + csv_file + "\"), \"html_document\")'"
+
+	result = subprocess.call( ["ssh" , server , rmd_command])
+	print result
+	print "\nhtml report written in '/home/maryem/monthlyReports/kvartalsrapport_clarity/" + dir_date
+
+
+if __name__=='__main__':
+	main()

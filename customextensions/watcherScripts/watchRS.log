@@ -1,0 +1,11 @@
+Number of processed lines:  0
+/usr/local/bin/python2.7 /opt/gls/clarity/customextensions/COMMON/COMMON_importSamplesCSV.py -u apiuser -p LateDollarsState592 -b https://mtapp046.lund.skane.se/api/v2/ -f <(/usr/local/python2.7 /opt/gls/clarity/customextensions/PreAnalys/Process_rslims_csv.py /mnt/limsrs-clarity/InstrSend/test.csv)
+Number of processed lines:  1
+Sample(SAL1A446)
+/usr/local/bin/python2.7 /opt/gls/clarity/customextensions/COMMON/COMMON_importSamplesCSV.py -u apiuser -p LateDollarsState592 -b https://mtapp046.lund.skane.se/api/v2/ -f <(/usr/local/bin/python2.7 /opt/gls/clarity/customextensions/PreAnalys/Process_rslims_csv.py /mnt/limsrs-clarity/InstrSend/test.csv)
+Number of processed lines:  4
+Sample(SAL1A447)
+Sample(SAL1A448)
+Sample(SAL1A449)
+Sample(SAL1A450)
+/usr/local/bin/python2.7 /opt/gls/clarity/customextensions/COMMON/COMMON_importSamplesCSV.py -u apiuser -p LateDollarsState592 -b https://mtapp046.lund.skane.se/api/v2/ -f <(/usr/local/bin/python2.7 /opt/gls/clarity/customextensions/PreAnalys/Process_rslims_csv.py /mnt/limsrs-clarity/InstrSend/test2.csv)

@@ -1,0 +1,26 @@
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+
+HOSTNAME = 'https://mtapp046.lund.skane.se'
+VERSION = "v2"
+BASE_URI = HOSTNAME + "/api/" + VERSION + "/"
+CACHE = {}
+
+def main():
+    api = None
+    api = glsapiutil.glsapiutil()
+    api.setHostname( HOSTNAME )
+    api.setVersion( "v2" )
+    api.setup( "apiuser", "LateDollarsState592" )
+
+    new_XML = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><art:artifact xmlns:udf="http://genologics.com/ri/userdefined" xmlns:file="http://genologics.com/ri/file" xmlns:art="http://genologics.com/ri/artifact" uri="https://mtapp046.lund.skane.se/api/v2/artifacts/2-552747?state=348608" limsid="2-552747"><name>20PL04725-200430</name><type>Analyte</type><output-type>Analyte</output-type><parent-process uri="https://mtapp046.lund.skane.se/api/v2/processes/151-91323" limsid="151-91323"/><qc-flag>PASSED</qc-flag><location><container uri="https://mtapp046.lund.skane.se/api/v2/containers/27-65474" limsid="27-65474"/><value>H:1</value></location><working-flag>true</working-flag><sample uri="https://mtapp046.lund.skane.se/api/v2/samples/ALL510A363" limsid="ALL510A363"/><reagent-label name="Duplex32 H04 (CGTTGCAA-CGCTCTAT)"/><udf:field type="Numeric" name="Qubit concentration (ng/ul)">141</udf:field><udf:field type="String" name="RNA input">500 ng in 50 ul</udf:field><workflow-stages><workflow-stage status="COMPLETE" name="Library quantification v.2" uri="https://mtapp046.lund.skane.se/api/v2/configuration/workflows/801/stages/1925"/><workflow-stage status="COMPLETE" name="Library quantification v.2" uri="https://mtapp046.lund.skane.se/api/v2/configuration/workflows/801/stages/1925"/><workflow-stage status="COMPLETE" name="Pooling of libraries before hybridization v.1" uri="https://mtapp046.lund.skane.se/api/v2/configuration/workflows/801/stages/1926"/></workflow-stages></art:artifact>'
+    print new_XML
+    response = api.updateObject(new_XML , 'https://mtapp046.lund.skane.se/api/v2/artifacts/2-552747')
+    print response
+
+if __name__ == "__main__":
+    main()

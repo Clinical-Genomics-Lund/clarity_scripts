@@ -1,0 +1,37 @@
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+
+HOSTNAME = 'https://mtapp046.lund.skane.se'
+VERSION = "v2"
+BASE_URI = HOSTNAME + "/api/" + VERSION + "/"
+
+def main():
+        global api
+
+        rXML = '<rt:routing xmlns:rt="http://genologics.com/ri/routing">
+<assign stage-uri="https://mtapp046.lund.skane.se/api/v2/configuration/workflows/804/stages/2155">
+<artifact uri="https://mtapp046.lund.skane.se/api/v2/artifacts/2-499749"/>
+<artifact uri="https://mtapp046.lund.skane.se/api/v2/artifacts/2-499750"/>
+<artifact uri="https://mtapp046.lund.skane.se/api/v2/artifacts/2-499803"/>
+<artifact uri="https://mtapp046.lund.skane.se/api/v2/artifacts/2-499805"/>
+<artifact uri="https://mtapp046.lund.skane.se/api/v2/artifacts/2-499806"/>
+</assign>
+</rt:routing>'
+
+        api = glsapiutil.glsapiutil()
+        api.setHostname( HOSTNAME )
+        api.setVersion( "v2" )
+        api.setup( "apiuser", "LateDollarsState592" )
+
+        #    print BASE_URI + "route/artifacts/"
+
+        response = api.createObject( rXML, BASE_URI + "route/artifacts/" )
+
+        print response
+
+if __name__ == "__main__":
+    main()

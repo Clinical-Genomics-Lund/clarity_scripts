@@ -1,0 +1,27 @@
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+
+HOSTNAME = 'https://mtapp046.lund.skane.se'
+VERSION = "v2"
+BASE_URI = HOSTNAME + "/api/" + VERSION + "/"
+CACHE = {}
+
+def main():
+    api = None
+    api = glsapiutil.glsapiutil()
+    api.setHostname( HOSTNAME )
+    api.setVersion( "v2" )
+    api.setup( "apiuser", "LateDollarsState592" )
+
+    new_XML = '<?xml version="1.0" encoding="UTF-8" standalone="true"?><smp:sample limsid="ALL351A19" uri="https://mtapp046.lund.skane.se/api/v2/samples/ALL351A19" xmlns:file="http://genologics.com/ri/file" xmlns:udf="http://genologics.com/ri/userdefined" xmlns:smp="http://genologics.com/ri/sample" xmlns:ri="http://genologics.com/ri"><name>5-Val-Blind</name><date-received>2018-11-06</date-received><date-completed>2018-12-31</date-completed><project limsid="ALL351" uri="https://mtapp046.lund.skane.se/api/v2/projects/ALL351"/><submitter uri="https://mtapp046.lund.skane.se/api/v2/researchers/5"><first-name>Maria</first-name><last-name>Sundberg</last-name></submitter><artifact limsid="ALL351A19PA1" uri="https://mtapp046.lund.skane.se/api/v2/artifacts/ALL351A19PA1?state=122314"/><udf:field type="String" name="Urgent">Nej</udf:field><udf:field type="String" name="Analysis">TruSeq Stranded mRNA - Fusion</udf:field><udf:field type="String" name="Classification">Valideringsprov</udf:field><udf:field type="Numeric" name="Sequencing runs">0</udf:field><udf:field type="String" name="Department">Klinisk Genetik</udf:field><udf:field type="String" name="Sample submission signing">MSG</udf:field><udf:field type="String" name="Nucleotide Type">RNA</udf:field><udf:field type="String" name="Progress">Library preparation and QC validation complete</udf:field><udf:field type="Numeric" name="Sample concentration (ng/ul)">11.5</udf:field><udf:field type="Numeric" name="DV200">95.31</udf:field><udf:field type="Numeric" name="Desired read count">32500000</udf:field></smp:sample>'
+
+    print new_XML
+    response = api.updateObject(new_XML , 'https://mtapp046.lund.skane.se/api/v2/samples/ALL351A19')
+    print response
+
+if __name__ == "__main__":
+    main()

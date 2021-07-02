@@ -1,0 +1,10 @@
+3409-18 ALL202A427 2018-04-16
+  cfDNA concentration (ng/ul) = 0.543
+  Classification = Rutinprov
+  Analysis = Clarigo NIPT Analys
+  Progress = Sequencing and Data Analysis Complete
+  Department = Klinisk Genetik
+  Sequencing runs = 1
+3409-18 ALL202A442 2018-04-23
+  Classification = Rutinprov
+  Sample comments = 

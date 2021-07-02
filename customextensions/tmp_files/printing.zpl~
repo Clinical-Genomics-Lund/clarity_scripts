@@ -1,0 +1,8 @@
+^XA
+
+^FX Second section with recipient address and permit information.
+^CFA,20
+^FO101,30^FDTest^FS
+^FO250,30^FDFin etikett^FS
+
+^XZ

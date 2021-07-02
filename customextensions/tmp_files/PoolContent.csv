@@ -1,0 +1,15 @@
+SORT.BY.${INPUT.LIMSID}
+<HEADER_BLOCK>
+Pool Content File
+</HEADER_BLOCK>
+<HEADER>
+Sample Name, Sample LIMSID, Barcode, Diagnosis, Used Panel, Sample Tube Label
+</HEADER>
+<DATA>
+${SAMPLE.NAME}, ${SAMPLE.LIMSID}, ${INPUT.REAGENT.NAME}, ${SAMPLE.UDF.Diagnosis}, ${INPUT.NAME}, ${OUTPUT.NAME}
+</DATA>
+<TOKEN_FORMAT>
+${INPUT.NAME}
+def panel = token.split("_")
+return panel[1]
+</TOKEN_FORMAT>

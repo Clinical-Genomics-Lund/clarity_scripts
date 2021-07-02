@@ -1,0 +1,226 @@
+import re
+import sys
+
+def getMICROinfo(planID, DOM, Name, Index, sLimsID, sUDFs, instrument):
+    SampleID = sLimsID + "_" + planID
+    #Index Example: A701-A503 (ATCACGAC-TGTTCTCT)
+    I7_ID = Index.split('-')[0]
+    I5_ID = re.search(r'\-(.*)\s', Index).group(1)
+
+    I7_Index = re.search(r'\((.*)\-', Index).group(1)
+    I5_Index = re.search(r'[A|T|G|C]{8}\-(.*)\)', Index).group(1)
+    if "NextSeq" in instrument or "MiniSeq" in instrument:
+        #Get reverse complement of Index 5
+        complement = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A'}
+        I5_Index = "".join(complement.get(base, base) for base in reversed(I5_Index))
+
+    #Get Species
+    if "S. aureus" in sUDFs["Reference Genome"] :
+        species = "s.aureus"
+    else:
+        print "Reference Genome must be chosen for microbiology samples"
+        sys.exit(255)
+
+    #Sample Project and Description Field
+    tokens = Name.split("_")
+    
+    SampleProj_Description = ",microbiology_" + tokens[0] + "_" + species
+
+    return SampleID, I7_ID, I7_Index, I5_ID, I5_Index, SampleProj_Description
+
+def getNIPTinfo(planID, DOM, Name, Index, sLimsID, instrument):
+    SampleID = sLimsID + "_" + planID
+
+    #Index example: A1 p704-p504 (CACCGGGA-CGATATGA)
+    p7p5 = Index.split(' ')[1]
+    I7_ID = p7p5[0:2] + "-" + p7p5[2:4]
+    I7_ID = p7p5[5:7] + "-" + p7p5[7:9]
+    I7_Index = re.search(r'\((.*)\-', Index).group(1)
+    I5_Index = re.search(r'[A|T|G|C]{8}\-(.*)\)', Index).group(1)
+    if "NextSeq" in instrument or "MiniSeq" in instrument:
+        #Get reverse complement of Index 5
+        complement = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A'}
+        I5_Index = "".join(complement.get(base, base) for base in reversed(I5_Index))
+
+    #Sample Project and Description Field
+    SampleProj_Description = "NIPT,nipt_" + Name
+
+    return SampleID, I7_ID, I7_Index, I5_ID, I5_Index, SampleProj_Description
+
+def getMYELOIDinfo(planID, DOM, Name, Index, sLimsID, sUDFs, instrument):
+
+    #Index Example: A701-A503 (ATCACGAC-TGTTCTCT)
+    I7_ID = Index.split('-')[0]
+    I5_ID = re.search(r'\-(.*)\s', Index).group(1)
+
+    I7_Index = re.search(r'\((.*)\-', Index).group(1)
+    I5_Index = re.search(r'[A|T|G|C]{8}\-(.*)\)', Index).group(1)
+    if "NextSeq" in instrument or "MiniSeq" in instrument:
+        #Get reverse complement of Index 5
+        complement = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A'}
+        I5_Index = "".join(complement.get(base, base) for base in reversed(I5_Index))
+
+    #Get Tumor/Normal
+    if "normal" in sUDFs["Sample Type"] :
+        SampleType = "N"
+    elif "malignitet" in sUDFs["Sample Type"] :
+        SampleType = "T"
+    else:
+        print "The Sample Type field of the Myeloid samples must contain either Vavnadsbiopsi normal or Hematologisk malignitet"
+        sys.exit(255)
+
+    #Get Diagnosis
+    if (('AML' in sUDFs["Diagnosis"]) or ('MDS' in sUDFs["Diagnosis"]) or ('MPN' in sUDFs["Diagnosis"]) or ('Annat' in sUDFs["Diagnosis"]) ):
+        Diagnosis = sUDFs["Diagnosis"]
+    else :
+        print "Sample Diagnosis must be either AML, MDS, MPN or Annat for the Myeloid samples"
+        sys.exit(255)
+
+    #Get paired/unpaired information
+    if "Myeloisk Panel - Parad" in sUDFs["Analysis"] :
+        Analysis = "paired"
+        PairedSample = sUDFs["Paired Sample Name"]
+    elif "Myeloisk Panel - Oparad" in sUDFs["Analysis"] :
+        Analysis = "unpaired"
+        PairedSample = "X"
+    else :
+        print "Analysis must be either 'Myelosik Panel - Parad' or 'Myeloisk Panel - Oparad'"
+        sys.exit(255)
+
+    #Get Panel from appended workflow-specific container identifier
+    #CAN2 == Nextera, LNP == TruSight Myeloid
+    tokens = Name.split("_")
+    if tokens[1] == 'CAN2' :
+        SampleID = sLimsID + "_N_" + planID
+        if PairedSample == "X":
+            SampleProj_Description = ",myeloid_N" + tokens[0] + "_" + Analysis + "_" + PairedSample + "_" + SampleType + "_" + Diagnosis
+        else:
+            SampleProj_Description = ",myeloid_N" + tokens[0] + "_" + Analysis + "_N" + PairedSample + "_" + SampleType + "_" + Diagnosis
+
+    elif tokens[1] == 'LNP' :
+        SampleID = sLimsID + "_" + planID
+        SampleProj_Description = ",myeloid_" + tokens[0] + "_" + Analysis + "_" + PairedSample + "_" + SampleType + "_" + Diagnosis
+    else :
+        print "The workflow identifiers 'CAN2' or 'LNP' must be appended to the Library name"
+        sys.exit(255)
+
+    return SampleID, I7_ID, I7_Index, I5_ID, I5_Index, SampleProj_Description
+                
+def getEXOMEinfo(planID, DOM, Name, Index, sLimsID, sUDFs, instrument):
+    SampleID = sLimsID + "_" + planID
+    #Index Example: A01 (GTCTGTCA)
+    I7_ID = Index.split(' ')[0]
+    I5_ID = "MolBC"
+    
+    I7_Index = re.search(r'\s\((.*)\)$', Index).group(1)
+    I5_Index = "NNNNNNNNNN"
+#    if "NextSeq" in instrument or "MiniSeq" in instrument:
+#        #Get reverse complement of Index 5
+#        complement = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A'}
+#        I5_Index = "".join(complement.get(base, base) for base in reversed(I5_Index))
+
+    #Sample Project and Description Field
+    #Trio example: exome _3901-15_3901-15_proband_M_affected_neuro
+    #Single example: exome _3213-16_X_X_M_affected_ahus
+    #Tumour example: exome-tumor_8776-17_paired_8775-17_T_F_neuroblastom
+    #SWEA BRCA example: exome-swea_1111-12_BRCA
+    if ( (sUDFs["Analysis"] == "SureSelect XTHS Clinical Exome - Trio") or (sUDFs["Analysis"] == "SureSelect XTHS Clinical Exome - Single") or (sUDFs["Analysis"] == "SureSelect XTHS Clinical Exome - Tumor Paired") or (sUDFs["Analysis"] == "SureSelect XTHS Clinical Exome - Tumor Unpaired") ):
+
+        if "Sex" in sUDFs:
+            if sUDFs["Sex"] == "Man":
+                sex = "M"
+            elif sUDFs["Sex"] == "Kvinna":
+                sex = "F"
+            elif (re.match(r'^Ok.*nt$', sUDFs["Sex"] )) :
+                sex = "U"
+            else :
+                print "Man, Kvinna or Okant must be indicated for the SureSelect XTHS Clinical Exome samples"
+                sys.exit(255)
+        else :
+            print "Man, Kvinna or Okant must be indicated for the SureSelect XTHS Clinical Exome samples"
+            sys.exit(255)
+
+    if "Diagnosis" in sUDFs:
+        if sUDFs["Diagnosis"] == "Pediatrik":
+            Application = "pediatrics"
+        elif sUDFs["Diagnosis"] == "Annat":
+            Application = "other"                            
+        elif ( (sUDFs["Diagnosis"] == "neuro") or (sUDFs["Diagnosis"] == "aHUS") or (sUDFs["Diagnosis"] == "MODY") or (sUDFs["Diagnosis"] == "cardio") or (sUDFs["Diagnosis"] == "complement") ):
+            Application = sUDFs["Diagnosis"]
+        else :
+            print "The diagnosis field must contain either aHUS, neuro, cardio, MODY, complement or Pediatrik"
+            sys.exit(255)
+    else:
+        if "SureSelect XTHS Clinical Exome - Tumor" in sUDFs["Analysis"]:
+            Application = "other"
+        elif sUDFs["Analysis"] == 'SureSelect XTHS Clinical Exome - SWEA BRCA' :
+            Application = "BRCA"
+        else:
+            print "The diagnosis field must contain either aHUS, neuro, cardio, MODY, complement, Pediatrik or BRCA"
+            sys.exit(255)
+
+    if sUDFs["Analysis"] == "SureSelect XTHS Clinical Exome - Trio" :
+        
+        if "Sample Type" in sUDFs:
+            if sUDFs["Sample Type"] == "Frisk":
+                Type = "unaffected"
+            elif sUDFs["Sample Type"] == "Sjuk" :
+                Type = "affected"
+            else:
+                print "The Sample Type field must contain either Sjuk or Frisk"
+                sys.exit(255)
+        else :
+            print "The Sample Type field must contain either Sjuk or Frisk"
+            sys.exit(255)
+
+        if "Pedigree" in sUDFs:
+            pedigree = sUDFs["Pedigree"]
+            if pedigree == "Mamma":
+                pedigree = "mother"
+            elif pedigree == "Pappa":
+                pedigree = "father"
+            elif pedigree == "Proband" :
+                pedigree = "proband"
+            elif pedigree == "Annat":
+                pedigree = "other"
+            else :
+                print "The pedigree must be either Mamma, Pappa, Proband or Annat for the SureSelect XTHS Clinical Exome samples"
+                sys.exit(255)
+        else :
+            print "The pedigree must be either Mamma, Pappa, Proband or Annat for the SureSelect XTHS Clinical Exome samples"
+            sys.exit(255)
+        
+        SampleProj_Description = ",exome_" + Name + "_" + sUDFs["FamilyID"] + "_" + pedigree + "_" + sex + "_" + Type + "_" + Application
+
+    elif sUDFs["Analysis"] == "SureSelect XTHS Clinical Exome - Single" :
+        SampleProj_Description = ",exome_" + Name + "_" + "X" + "_" + "X" + "_" + sex + "_affected_" + Application
+
+    elif "SureSelect XTHS Clinical Exome - Tumor" in sUDFs["Analysis"]:
+    #Get paired/unpaired information
+        if "Tumor Paired" in sUDFs["Analysis"] :
+            Analysis = "paired"
+            PairedSample = sUDFs["Paired Sample Name"]
+        elif "Tumor Unpaired" in sUDFs["Analysis"] :
+            Analysis = "unpaired"
+            PairedSample = "X"
+        else :
+            print "Tumor analysis must be either 'SureSelect XTHS Clinical Exome - Tumor Paired' or 'SureSelect XTHS Clinical Exome - Tumor Unpaired'"
+            sys.exit(255)
+
+    #Get Tumor/Normal
+        if "Normal" in sUDFs["Sample Type"] :
+            SampleType = "N"
+        elif "Tum" in sUDFs["Sample Type"][:3] :
+            SampleType = "T"
+        else:
+            print "The Sample Type field of the SureSelect Tumor samples must contain either 'Normalprov' or 'Tumorprov'"
+            sys.exit(255)
+
+        SampleProj_Description = ",exome-tumor_" + Name + "_" + Analysis + "_" + PairedSample + "_" + SampleType + "_" + sex + "_" + Application
+
+    elif (sUDFs["Analysis"] == 'SureSelect XTHS Clinical Exome - SWEA BRCA' ) :
+        SampleProj_Description = ",exome-swea_" + Name + "_" + Application
+    else:
+        print "Trio, Single, Tumor or SWEA must be indicated in the analysis field for the SureSelect XTHS Clinical Exome samples"
+
+    return SampleID, I7_ID, I7_Index, I5_ID, I5_Index, SampleProj_Description

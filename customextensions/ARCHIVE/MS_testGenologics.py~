@@ -1,0 +1,48 @@
+# -*- coding: utf-8 -*- 
+"""Python interface to GenoLogics LIMS via its REST API.
+"""
+from genologics.lims import *
+#from genologics.config import BASEURI, USERNAME, PASSWORD
+#from genologics.entities import SampleHistory
+import sys
+import getopt
+
+
+def main():
+	global args
+	args = {}
+	opts, extraparams = getopt.getopt(sys.argv[1:], "b:s:u:p:")
+	for o,p in opts:
+		if o == '-b':
+			args[ "BASEURI" ] = p
+		elif o == '-u':
+			args[ "USERNAME" ] = p
+		elif o == '-p':
+			args[ "PASSWORD" ] = p
+	BASEURI = args["BASEURI"].split('api')[0]
+
+	lims = Lims(BASEURI, args["USERNAME"], args["PASSWORD"])
+	lims.check_version()
+	
+#	print process, process.id, process.type, process.type.name
+#		if input:
+#			print 'input:', input.items()
+#		if output:
+#			print 'output:', output.items()
+	artifacts = lims.get_artifacts( type='ResultFile' , udf={'NIPT report - comment' : 'Ingen förhöjd risk för trisomi 13, 18 eller 21. Fetalfraktion precis under gränsen, men analysresultatet bedöms ändå som negativt.'})  
+
+	excludeList = [ 'Patient Name', 'cfDNA extraction', 'Isolation of plasma' , 'Urgent' , 'Date of arrival', 'Sample submission signing', 'Personal Identity Number', 'Nucleotide Type' , 'Plasma volume (ml)']
+	for artifact in artifacts : 
+		samples = lims.get_samples(name=artifact.name)
+		for sample in samples: 
+			print artifact.name , sample.id , sample.date_received 
+			for  key, value in sample.udf.items():
+				if key not in excludeList:
+					print ' ', key, '=', value
+		
+	sys.exit(255)
+
+				
+if __name__=='__main__':
+	main()
+

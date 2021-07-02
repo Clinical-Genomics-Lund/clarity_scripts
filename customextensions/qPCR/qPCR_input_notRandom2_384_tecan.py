@@ -1,0 +1,133 @@
+import sys
+import csv
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+import platform
+from xml.dom.minidom import parseString
+
+HOSTNAME = platform.node() # get the system hostname
+HOSTNAME = "https://" + HOSTNAME
+VERSION = "v2"
+BASE_URI = HOSTNAME + "/api/" + VERSION + "/"
+api = None
+
+def getWellDuplicate(wellposition,duplicate) :
+    
+    letter = wellposition[0]
+    letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P']
+    duplication_letter =letters[letters.index(letter) + 1]
+        
+    if  duplicate == 1.0:
+        dup_num = int(wellposition[1:])
+        wellDuplicate = duplication_letter + str(dup_num)
+
+    elif  duplicate == 2.0:
+        dup_num=int(wellposition[1:]) + 1
+        wellDuplicate = letter + str(dup_num)
+    
+    elif  duplicate == 3.0:
+        dup_num = int(wellposition[1:]) + 1
+        wellDuplicate = duplication_letter + str(dup_num)
+    
+    return wellDuplicate
+
+
+def getWell(wellposition):
+    letter = wellposition[0]
+    number = int(wellposition[1:])
+    letterDict = {'A': 0, 'B' : 24, 'C' :48 , 'D' :72 , 'E' :96 , 'F' :120, 'G' :144, 'H' :168  ,'I':192, 'J':216, 'K':240, 'L':264, 'M':288, 'N':312, 'O':336, 'P':360}
+    well = letterDict[letter] + number
+    return well
+
+def getSamples(output):
+    DOM = parseString( api.GET(HOSTNAME + '/api/v2/artifacts/' + output))
+    sample = DOM.getElementsByTagName( "sample")[0].getAttribute("limsid")
+    return sample
+
+def getOutputArtifacts():
+    
+    detailsURI = args[ "stepURI" ] + "/details"
+    detailsURI = re.sub("http://localhost:9080", HOSTNAME , detailsURI)
+    detailsDOM = parseString( api.GET(detailsURI) )
+
+    IOMaps = detailsDOM.getElementsByTagName( "input-output-map" )
+    for IOMap in IOMaps:
+        Nodes = IOMap.getElementsByTagName( "output" )
+        if (Nodes[0].getAttribute( "output-generation-type" ) == "PerInput" ) :
+            outputDOM = parseString(api.GET( Nodes[0].getAttribute( "uri" ) ))
+            well = outputDOM.getElementsByTagName( "value" )[0].firstChild.data
+            well = well.replace(':' ,'', 1)
+            outputArtifacts[(getSamples( Nodes[0].getAttribute( "limsid" )) )] = well
+
+    return outputArtifacts
+
+def main():
+
+    global api
+    global args
+    global outputArtifacts
+
+    args = {}
+    outputArtifacts = {}
+
+    opts, extraparams = getopt.getopt(sys.argv[1:], "s:u:p:f:")
+
+    for o,p in opts:
+        if o == '-s':
+            args[ "stepURI" ] = p
+        elif o == '-u':
+            args[ "username" ] = p
+        elif o == '-p':
+            args[ "password" ] = p
+        elif o == '-f':
+            args[ "outputfile" ] = p
+
+    api = glsapiutil.glsapiutil2()
+    api.setHostname( HOSTNAME )
+    api.setVersion( "v2" )
+    api.setup( args[ "username" ], args[ "password" ] )
+
+    outputArtifacts = getOutputArtifacts()
+
+    if len(outputArtifacts) > 80:
+        api.reportScriptStatus( stepURI, "ERROR", "Too many input samples. The maximum number of samples for this step is 80.")
+
+    f_out = open(args[ "outputfile" ] + '.csv', 'w+')
+    writer = csv.writer(f_out, delimiter=',', quotechar="\'", quoting=csv.QUOTE_NONE)
+
+    f_out.write('[Sample Setup]'+ '\n')
+    writer.writerow( ('Well', 'Well Position', 'Sample Name', 'Biogroup Name', 'Biogroup Color', 'Target Name', 'Task' , 'Reporter', 'Quencher', 'Quantity' ,'Comments') )
+    writer.writerow( ('1', 'A1', 'ST1' ,'' ,'' ,'Target 1','STANDARD','SYBR','None','"20.0"','' ) ) 
+    writer.writerow( ('49', 'C1', 'ST2' ,'' ,'' ,'Target 1','STANDARD','SYBR','None','"2.0"', '') )
+    writer.writerow( ('97', 'E1', 'ST3' ,'' ,'' ,'Target 1','STANDARD','SYBR','None','"0.2"', '') )
+    writer.writerow( ('145', 'G1', 'ST4' ,'' ,'' ,'Target 1','STANDARD','SYBR','None','"0.02"','' ))
+    writer.writerow( ('193', 'I1', 'ST5' ,'' ,'' ,'Target 1','STANDARD','SYBR','None','"0.002"','' ))
+    writer.writerow( ('241', 'K1', 'ST6' ,'' ,'' ,'Target 1','STANDARD','SYBR','None','"0.0002"','' ))
+    writer.writerow( ('337', 'O1', 'NTC' ,'' ,'' ,'Target 1','NTC','SYBR','None','','' ) )
+
+    writer.writerow( ('2', 'A2', 'ST1' ,'' ,'' ,'Target 1','STANDARD','SYBR','None','"20.0"','' ) )
+    writer.writerow( ('50', 'C2', 'ST2' ,'' ,'' ,'Target 1','STANDARD','SYBR','None','"2.0"', '') )
+    writer.writerow( ('98', 'E2', 'ST3' ,'' ,'' ,'Target 1','STANDARD','SYBR','None','"0.2"','' ) )
+    writer.writerow( ('146', 'G2', 'ST4' ,'' ,'' ,'Target 1','STANDARD','SYBR','None','"0.02"','' ) )
+    writer.writerow( ('194', 'I2', 'ST5' ,'' ,'' ,'Target 1','STANDARD','SYBR','None','"0.002"','' ))
+    writer.writerow( ('242', 'K2', 'ST6' ,'' ,'' ,'Target 1','STANDARD','SYBR','None','"0.0002"','' ))
+    writer.writerow( ('338', 'O2', 'NTC' ,'' ,'' ,'Target 1','NTC','SYBR','None','','' ) )
+ 
+
+    for key in outputArtifacts :
+            writer.writerow((getWell(outputArtifacts[key]) , outputArtifacts[key], key, '' ,'' ,'Target 1','UNKNOWN','SYBR','None','', '' ))
+            
+            duplicate = 1
+            writer.writerow((getWell(getWellDuplicate(outputArtifacts[key],duplicate)),getWellDuplicate(outputArtifacts[key], duplicate),key,'','','Target 1','UNKNOWN','SYBR','None','',''))
+   
+            duplicate = 2
+            writer.writerow((getWell(getWellDuplicate(outputArtifacts[key],duplicate)),getWellDuplicate(outputArtifacts[key],duplicate),key,'','' ,'Target 1','UNKNOWN','SYBR','None','',''))
+
+            duplicate = 3
+            writer.writerow((getWell(getWellDuplicate(outputArtifacts[key],duplicate)),getWellDuplicate(outputArtifacts[key],duplicate), key, '' ,'' ,'Target 1','UNKNOWN','SYBR','None','',''))   
+    f_out.close()
+
+if __name__ == "__main__":
+    main()

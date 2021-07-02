@@ -1,0 +1,116 @@
+from optparse import OptionParser
+import glsapiutil
+from xml.dom.minidom import parseString
+import sys
+
+f = open('/all/route_to_seq_protocol.log', 'w')
+
+
+#####################################################################################
+### The output artifacts can be routed to one of the potential stages
+
+availableStages = { 
+                    "TruSightMyeloid_NextSeq": "https://mtapp046.lund.skane.se/api/v2/configuration/workflows/451/stages/710",
+                    "NexteraQAML_NextSeq": "https://mtapp046.lund.skane.se/api/v2/configuration/workflows/452/stages/724",
+                    "TruSightMyeloid_MiniSeq": "https://mtapp046.lund.skane.se/api/v2/configuration/workflows/451/stages/711",
+                    "NexteraQAML_MiniSeq": "https://mtapp046.lund.skane.se/api/v2/configuration/workflows/452/stages/725",
+                    "Microbiology_NextSeq": "https://mtapp046.lund.skane.se/api/v2/configuration/workflows/802/stages/1989",
+                    "Microbiology_MiniSeq": "https://mtapp046.lund.skane.se/api/v2/configuration/workflows/802/stages/1988",
+                    "Microbiology_NovaSeq": "https://mtapp046.lund.skane.se/api/v2/configuration/workflows/802/stages/1990",
+                    "SureSelectXTHS_MiniSeq": "https://mtapp046.lund.skane.se/api/v2/configuration/workflows/454/stages/815",
+                    "SureSelectXTHS_NextSeq": "https://mtapp046.lund.skane.se/api/v2/configuration/workflows/454/stages/816",
+                    "TruSeqStrandedmRNA_MiniSeq" : "https://mtapp046.lund.skane.se/api/v2/configuration/workflows/803/stages/2104",
+                    "TruSeqStrandedmRNA_NextSeq" : "https://mtapp046.lund.skane.se/api/v2/configuration/workflows/803/stages/2105", 
+                    "TruSeqStrandedmRNA_NovaSeq" : "https://mtapp046.lund.skane.se/api/v2/configuration/workflows/803/stages/2106",
+                    "TWIST_NextSeq" : "https://mtapp046.lund.skane.se/api/v2/configuration/workflows/801/stages/1932", 
+                    "TWIST_NovaSeq" : "https://mtapp046.lund.skane.se/api/v2/configuration/workflows/801/stages/1933", 
+                   # "NexteraQAML_NovaSeq" : "https://mtapp046.lund.skane.se/api/v2/configuration/workflows/801/stages/1933"
+                    }
+#####################################################################################
+def pack_and_send( stageURI, pool, f ):
+## Step 4: Build and submit the routing message
+    rXML = '<rt:routing xmlns:rt="http://genologics.com/ri/routing">'
+    rXML = rXML + '<assign stage-uri="' + stageURI + '">'
+    for p in pool: 
+        rXML = rXML + '<artifact uri="' + p + '"/>'
+    rXML = rXML + '</assign>'
+    rXML = rXML + '</rt:routing>'
+
+    f.write(rXML)
+
+    response = api.POST( rXML, api.getBaseURI() + "route/artifacts/" )
+
+    return response
+
+def routeAnalytes( stageURIlist ):
+
+    pools_to_route = {}
+
+    ## Step 1: Get the step XML
+    pURI = args.stepURI + "/pools"
+    pXML = api.GET( pURI )
+    pDOM = parseString( pXML )
+
+    instrument = args.kit.split(" ")[0]
+    
+    ## Step 2: Cache Output pools
+    pools = pDOM.getElementsByTagName( "pool" )
+    for pool in pools:
+        poolURI =  pool.getAttribute( "output-uri" )
+        poolName = pool.getAttribute( "name" ).split("_")[0]
+
+        if "TWIST" in poolName:
+            poolName = "TWIST"
+
+        key = poolName + "_" + instrument
+
+        if availableStages[key] in pools_to_route.keys() :
+            pools_to_route[ availableStages[key] ].append(poolURI)
+        else:
+            pools_to_route[ availableStages[key] ] = [poolURI]
+
+    return pools_to_route
+
+def setupArguments():
+
+    Parser = OptionParser()
+    Parser.add_option('-u', "--username", action='store', dest='username')
+    Parser.add_option('-p', "--password", action='store', dest='password')
+    Parser.add_option('-s', "--stepURI", action='store', dest='stepURI')
+    Parser.add_option('-k', "--kit", action='store', dest='kit')
+    Parser.add_option('-l', "--logfile", action='store', dest='logfile')
+
+    return Parser.parse_args()[0]
+
+def main():
+
+    global args
+    args = setupArguments()
+
+    global api
+    api = glsapiutil.glsapiutil2()
+    api.setURI( args.stepURI )
+    api.setup( args.username, args.password )
+
+    stageURIlist = list( availableStages.values() )
+
+    f = open(args.logfile, 'w')
+
+    pools_to_route = routeAnalytes( stageURIlist )
+
+    # Sends seperate routing messages for each stage
+    for stage, pool in pools_to_route.items():
+
+        r = pack_and_send( stage, pool, f )
+        
+        f.write( r)
+                            
+        if len( parseString( r ).getElementsByTagName( "rt:routing" ) ) > 0:
+            msg = str( "Pool added to " + stage )
+        else:
+            msg = r
+        print msg
+        f.write( msg)
+
+if __name__ == "__main__":
+    main()

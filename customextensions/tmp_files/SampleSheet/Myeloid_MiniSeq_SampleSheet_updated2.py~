@@ -1,0 +1,264 @@
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import pprint
+
+HOSTNAME = 'https://mtapp046.lund.skane.se'
+VERSION = "v2"
+BASE_URI = HOSTNAME + "/api/" + VERSION + "/"
+#count_steps is used to make sure that the correct 
+#analyte is used when an input pool contains only one sample
+count_steps = 0
+CACHE = {}
+api = None
+now = datetime.datetime.now()
+
+def getInputArtifacts( limsid, ppDOM ):
+
+    arts = []
+    for IOMap in ppDOM.getElementsByTagName( "input-output-map" ):
+        oLimsid = IOMap.getElementsByTagName( "output" )[0].getAttribute( "limsid" )
+        if oLimsid == limsid:
+            iURI = IOMap.getElementsByTagName( "input" )[0].getAttribute( "uri" )
+            arts.append( iURI )
+
+    return arts
+
+def getNonPooledArtifacts( iURI ):
+    global count_steps
+    global input_artifacts
+    count_steps += 1
+
+    ## get the artifact
+    iDOM = parseString( api.GET( iURI ) )
+    
+    ## how many samples are associated with this artifact?
+    Nodes = iDOM.getElementsByTagName( "sample" )
+    if len( Nodes ) == 1 & (count_steps >2):
+        input_artifacts.append( iURI )
+
+    else:
+        ##get the process that produced this artifact
+        ppDOM = parseString( api.GET(iDOM.getElementsByTagName( "parent-process" )[0].getAttribute( "uri" )))
+        ## get the limsid of this artifact
+        aLimsid = iDOM.getElementsByTagName( "art:artifact" )[0].getAttribute( "limsid" )
+
+        ## get the inputs that corresponds to this artifact
+        for IOMap in ppDOM.getElementsByTagName( "input-output-map" ):
+            oLimsid = IOMap.getElementsByTagName( "output" )[0].getAttribute( "limsid" )
+            if oLimsid == aLimsid:
+                iURI = IOMap.getElementsByTagName( "input" )[0].getAttribute( "uri" )
+                getNonPooledArtifacts( iURI )
+    
+    return input_artifacts
+
+def getSampleSheetInfo( arts ):
+    SampleDict = {}
+    Samples = []
+    panel = ""
+
+    #Loop through each artifact
+    for art in arts:
+        artDOM = parseString( api.GET(art) )
+
+        #Get Sample URI
+        sampleURI = artDOM.getElementsByTagName( "sample" )[0].getAttribute( "uri" )
+        sampleDOM = parseString(sampleURI)
+
+        #Save Sample LIMSID
+        sampleLimsID = rtDOM.getElementsByTagName( "sample" )[0].getAttribute( "limsid" )
+        Samples.append(sampleLimsID)
+        SampleDict[sampleLimsID] = {}
+        
+        #Get Panel from appended workflow-specific container identifier
+        LibraryName = artDOM.getElementsByTagName("name")[0].firstChild.data
+        tokens = LibraryName.split("_")
+        #CAN2 == Nextera, LNP == TruSight Myeloid
+        if tokens[1] == 'CAN2' :
+            panel = 'myeloid_N'
+            SampleDict[sampleLimsID] = {'panel': panel}  
+            SampleDict[sampleLimsID].update({'LibraryName' : tokens[0] })
+            SampleName = sampleLimsID + '_N'
+            SampleDict[sampleLimsID].update({'SampleName' : SampleName })
+
+        elif tokens[1] == 'LNP' :
+            panel = 'myeloid_'
+            SampleDict[sampleLimsID] = {'panel' : panel }
+            SampleDict[sampleLimsID].update({'LibraryName' : tokens[0] })
+            SampleDict[sampleLimsID].update({'SampleName' : sampleLimsID })
+
+        else :
+            api.reportScriptStatus( args[ "stepURI" ], "ERROR", "The workflow identifiers 'CAN2' or 'LNP' must be appended to the Library name")
+
+        #Get Reagent label
+        ReagentLabels = artDOM.getElementsByTagName( "reagent-label" )
+        for reagent in ReagentLabels:
+            ReagentLabel = reagent.getAttribute("name")
+            #Example: A701-A503 (ATCACGAC-TGTTCTCT)
+            index7 = ReagentLabel.split('-')[0]
+            SampleDict[sampleLimsID].update({'index7' : index7})
+
+            index5 = re.search(r'\-(.*)\s', ReagentLabel).group(1)
+            SampleDict[sampleLimsID].update({'index5' : index5 })
+           
+            i7_seq = re.search(r'\((.*)\-', ReagentLabel).group(1)
+            SampleDict[sampleLimsID].update({'i7_seq' : i7_seq })
+
+            i5_seq = re.search(r'[A|T|G|C]{8}\-(.*)\)', ReagentLabel).group(1)
+            #Get reverse complement of Index 5
+            complement = {'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A'}
+            rc_i5_seq = "".join(complement.get(base, base) for base in reversed(i5_seq))
+            SampleDict[sampleLimsID].update({'rc_i5_seq' : rc_i5_seq })
+
+        #Loop over the sample level UDFs and get the information
+        elements = sampleDOM.getElementsByTagName( "udf:field" )
+        SampleType = ""
+        Diagnosis = ""
+        Analysis = ""
+        paired = 0
+
+        for udf in elements:
+            temp = udf.getAttribute( "name" )
+
+            #Get Sample Type (Normal/Tumour)
+            if temp == 'Sample Type':
+                #SampleType = udf.firstChild.data[0]
+                SampleType = udf.firstChild.data.split(' ')
+                SampleType = SampleType[1]
+                if SampleType == 'normal' or SampleType == 'malignitet' : 
+                    if SampleType == 'normal' :
+                        SampleType = 'N'
+                    if SampleType == 'malignitet' : 
+                        SampleType = 'T'
+                    SampleDict[sampleLimsID].update({ 'SampleType' : SampleType })
+                else :
+                    api.reportScriptStatus( args[ "stepURI" ], "ERROR", "The Sample Type field must contain either Vavnadsbiopsi normal or Hematologisk malignitet")
+
+            # Get Diagnosis
+            if temp == 'Diagnosis':
+                Diagnosis = udf.firstChild.data
+                if Diagnosis == 'AML' or Diagnosis == 'MDS' or Diagnosis == 'MPN' or Diagnosis == 'Annat' :
+                    SampleDict[sampleLimsID].update({ 'Diagnosis' : Diagnosis })
+                else :
+                    api.reportScriptStatus( args[ "stepURI" ], "ERROR", "Sample Diagnosis must be either AML, MDS, MPN or 'Annat'")
+
+            # Get paired/unpaired information
+            if temp == 'Analysis':
+                if (udf.firstChild.data == "Myeloisk Panel - Parad" ):
+                    Analysis = "paired"
+                    paired += 1
+                    if (panel== "myeloid_N") :
+                        Analysis = Analysis + "_N"
+                    if (panel == "myeloid_") :
+                        Analysis = Analysis + "_"
+                    SampleDict[sampleLimsID].update({'PairedInfo' : Analysis})
+
+                elif (udf.firstChild.data == "Myeloisk Panel - Oparad" ):
+                    Analysis = "unpaired_X_"
+                    SampleDict[sampleLimsID].update({'PairedInfo' : Analysis })
+                else :
+                    api.reportScriptStatus( args[ "stepURI" ], "ERROR", "Analysis must be either 'Myelosik Panel - Parad' or 'Myeloisk Panel - Oparad'")
+            
+            # if analysis is paired, find the paired sample name
+            if temp == 'Paired Sample Name' : 
+                pairedSample = udf.firstChild.data
+                SampleDict[sampleLimsID].update({'PairedSample' : pairedSample})
+
+        if paired >0 : #paired
+            Analysis = SampleDict[sampleLimsID]['PairedInfo'] + SampleDict[sampleLimsID]['PairedSample'] + '_' 
+            SampleDict[sampleLimsID].update({'Analysis' : Analysis})
+            if not len(SampleDict[sampleLimsID]) == 12 :
+                api.reportScriptStatus( args[ "stepURI" ], "ERROR", "The python dictionary must contain all neccessary information. Length: " + str(len(SampleDict[sampleLimsID])) + " " + pprint.pformat(SampleDict) )
+
+        else : #unpaired
+            SampleDict[sampleLimsID].update({'Analysis' : SampleDict[sampleLimsID]['PairedInfo'] }) 
+            if not len(SampleDict[sampleLimsID]) == 11 :
+                api.reportScriptStatus( args[ "stepURI" ], "ERROR", "The python dictionary must contain all neccessary information. Length: " + str(len(SampleDict[sampleLimsID])) + " " + pprint.pformat(SampleDict) )
+
+# pprint.pformat(SampleDict) 
+        
+    return Samples, SampleDict
+
+def getInputOutputPools():
+    
+    detailsURI = re.sub("http://localhost:9080", HOSTNAME , args[ "stepURI" ] + "/details" )
+    detailsDOM = parseString( api.GET(detailsURI) )
+
+    for IOMap in detailsDOM.getElementsByTagName( "input-output-map" ):
+        iLimsid = IOMap.getElementsByTagName( "input" )[0].getAttribute( "limsid" )
+        inputPools.append( iLimsid)
+        if (IOMap.getElementsByTagName( "output" )[0].getAttribute( "type" ) == "Analyte" ) :
+            outputPools.append(IOMap.getElementsByTagName( "output" )[0].getAttribute( "limsid" ))
+        
+    return inputPools, outputPools
+
+def main():
+
+    global api
+    global args
+    global inputPools
+    global outputPools
+    global outputPool
+    global count_steps
+    global input_artifacts
+
+    args = {}
+    inputPools = []
+    outputPools = []
+    outputPool = ""
+    input_artifacts = []
+
+    opts, extraparams = getopt.getopt(sys.argv[1:], "s:u:p:f:")
+
+    for o,p in opts:
+        if o == '-s':
+            args[ "stepURI" ] = p
+        elif o == '-u':
+            args[ "username" ] = p
+        elif o == '-p':
+            args[ "password" ] = p
+        elif o == '-f':
+            args[ "outputfile" ] = p
+
+    api = glsapiutil.glsapiutil2()
+    api.setHostname( HOSTNAME )
+    api.setVersion( "v2" )
+    api.setup( args[ "username" ], args[ "password" ] )
+
+    inputPools, outputPools = getInputOutputPools()
+
+    # Make the content of the lists unique
+    inputPools = list(set(inputPools))
+    outputPools = list(set(outputPools) )
+
+    # Make sure that the user has only one output pool
+    if len(outputPools) > 1 :
+        api.reportScriptStatus( args[ "stepURI" ], "ERROR", "Only one output pool is allowed")
+    else : 
+        outputPool = outputPools[0]
+
+    Date = now.strftime("%Y-%m-%d")
+    f_out = open(args[ "outputfile" ] + '.csv', 'w+')
+    #Write out header section
+    f_out.write('[Header]\nExperiment Name,' + Date + '\nDate,' + Date + '\nWorkflow,GenerateFASTQ\nAssay,Nextera Rapid Capture Enrichment\nChemistry,Amplicon\n\n[Reads]\n151\n151\n\n[Settings]\nAdapter,CTGTCTCTTATACACATCT\n\n')
+    f_out.write('[Data]\nSample_ID,Sample_Name,Sample_Plate,Sample_Well,I7_Index_ID,index,I5_Index_ID,index2,Sample_Project,Description\n')
+
+    #Loop over the pools and get required information
+    for inputPool in inputPools :
+        count_steps = 0
+        #Get the artifacts belonging to the inputPool
+        input_artifacts = getNonPooledArtifacts( BASE_URI + "artifacts/" + inputPool )
+
+        Samples, SampleDict = getSampleSheetInfo( input_artifacts )
+        for sample in Samples :
+            f_out.write(SampleDict[sample]['SampleName'] + "_" + outputPool + ",,,," + SampleDict[sample]['index7'] + "," + SampleDict[sample]['i7_seq'] + "," + SampleDict[sample]['index5'] + "," + SampleDict[sample]['rc_i5_seq'] + ",," + SampleDict[sample]['panel'] + SampleDict[sample]['LibraryName'] + "_" + SampleDict[sample]['Analysis'] + SampleDict[sample]['SampleType'] + "_" + SampleDict[sample]['Diagnosis'] + "\n")     
+
+    
+    f_out.close()
+
+if __name__ == "__main__":
+    main()

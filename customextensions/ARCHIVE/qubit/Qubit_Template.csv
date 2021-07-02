@@ -1,0 +1,9 @@
+INCLUDE.OUTPUT.RESULTFILES
+<DATA>
+${INPUT.CONTAINER.NAME}_${INPUT.CONTAINER.PLACEMENT}_${INPUT.NAME}
+</DATA>
+<PLACEMENT>
+// The inputs to this segment are: String row, String column, Node containerTypeNode
+if (containerTypeNode.@name == "96 well plate") return row + column
+else return row + ":" + column
+</PLACEMENT>

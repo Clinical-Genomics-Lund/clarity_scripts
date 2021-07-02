@@ -1,0 +1,85 @@
+import sys
+import re
+import getopt
+import xml.dom.minidom
+import glsapiutil
+from xml.dom.minidom import parseString
+import datetime
+import os
+import platform
+from subprocess import call
+
+
+now = datetime.datetime.now()
+HOSTNAME = platform.node() # get the system hostname
+HOSTNAME = "https://" + HOSTNAME
+VERSION = "v2"
+api = None
+
+def printLabel(Input):
+
+    #Get the date
+    Date = now.strftime("%Y-%m-%d")
+    
+    for LimsID in sorted(Input):
+        filename = '/all/' + LimsID + '.zpl'
+        f = open(filename, 'w+')
+        
+        f.write('^XA\n^CFA,25\n^FO25,20^FD' + LimsID + '^FS\n^CFA,20\n^FO25,45^FD' + Input[LimsID] + '^FS\n^FO25,65^FD' + Date + '^FS\n^XZ')
+        f.close()
+        call( ['lp','-d','ZebraPat','-o','raw',filename])
+        os.remove(filename)
+
+def getInputSamples():
+    InputSamples = {}
+    tmpList = []
+    detailsURI = args[ "stepURI" ] + "/details"
+    detailsURI = re.sub("http://localhost:9080", HOSTNAME, detailsURI)
+    detailsXML = api.getResourceByURI( detailsURI )
+    detailsDOM = parseString( detailsXML )
+
+    IOMaps = detailsDOM.getElementsByTagName( "input-output-map" )
+    for IOMap in IOMaps:
+        Nodes = IOMap.getElementsByTagName( "input" )
+        iURI = Nodes[0].getAttribute( "uri" )
+        tmpList.append(iURI)
+    
+    for iURI in tmpList:
+        iXML = api.getResourceByURI( iURI )
+        iDOM = parseString( iXML )
+        #Get Sample LimsID
+        sampleLimsID = iDOM.getElementsByTagName( "sample" )[0].getAttribute( "limsid" )
+        sampleName = iDOM.getElementsByTagName( "name" )[0].firstChild.data 
+        InputSamples[sampleLimsID] = sampleName
+    
+    return InputSamples
+
+def main():
+
+    global api
+    global args
+    global InputSamples
+
+    args = {}
+
+    opts, extraparams = getopt.getopt(sys.argv[1:], "s:u:p:")
+
+    for o,p in opts:
+        if o == '-s':
+            args[ "stepURI" ] = p
+        elif o == '-u':
+            args[ "username" ] = p
+        elif o == '-p':
+            args[ "password" ] = p
+
+    api = glsapiutil.glsapiutil()
+    api.setHostname( HOSTNAME )
+    api.setVersion( VERSION )
+    api.setup( args[ "username" ], args[ "password" ] )
+
+    InputSamples = getInputSamples()
+
+    printLabel(InputSamples)
+
+if __name__ == "__main__":
+    main()
